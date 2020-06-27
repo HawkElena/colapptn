@@ -1,0 +1,283 @@
+<div class="box box-primary">
+    <div class="box-header with-border">
+       
+        <div class="row">
+            <div class="col-md-12">
+                <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <form class="config-form col-md-12" #configPagoForm="ngForm" (ngSubmit)='onSubmit(configPagoForm)'>
+                    <h4 class="pull-left tamanyo_letra_titulo"> {{ titulo }} </h4>
+                    <!-- Parámetros de control del servicio -->
+                    <input type="hidden" name="pagoConfigId" #pagoConfigId="ngModel"
+                        [(ngModel)]="configPagosService.configPagoSeleccionado.pagoConfigId">
+                    <input type="hidden" name="colegioId" #colegioId="ngModel"
+                        [(ngModel)]="configPagosService.configPagoSeleccionado.colegioId">
+                    <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                        [(ngModel)]="configPagosService.configPagoSeleccionado.opcionDML">
+                    <div class="row">
+                        <div class="form-grou col-md-2">
+                            <div class="form-group ">
+                                <label for="nivelId" class="control-label tamanyo_letra_labelp">Ciclo</label>
+                                <select class="form-control tamanyo_letra_inputp" name="ciclo" #ciclo="ngModel"
+                                    [(ngModel)]="configPagosService.configPagoSeleccionado.ciclo">
+                                    <option *ngFor="let cic of cicloService.cicloList" [value]="cic.anio">{{cic.anio}}
+                                    </option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-grou col-md-2">
+                            <div class="form-group">
+                                <label for="nivelId" class="control-label tamanyo_letra_labelp">Nivel</label>
+                                <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                    [(ngModel)]="configPagosService.configPagoSeleccionado.nivelId"
+                                    (ngModelChange)="listarCarreraJornada($event)">
+                                    <option *ngFor="let nivel of nivelService.nivelList" [value]="nivel.nivelId">
+                                        {{nivel.nivelNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-grou col-md-8">
+                            <label for="jcId" class="control-label tamanyo_letra_labelp">Carrera</label>
+                            <select class="form-control tamanyo_letra_inputp" name="jcId" #jcId="ngModel"
+                                [(ngModel)]="configPagosService.configPagoSeleccionado.jcId" required>
+                                <option *ngFor="let carJor of carreraJornadaService.carJorList"
+                                    [value]="carJor.carJorId">{{carJor.carJorId}} {{carJor.carreraNombre
+                            }} {{carJor.jornadaNombre}} </option>
+                            </select>
+                            <div class="validation-error text_campo_requerido" *ngIf="jcId.invalid && jcId.touched">Campo requerido</div>
+                        </div>                        
+                    </div>
+
+                    <div class="row">
+                        <div class="form-grou col-md-4">
+                            <label for="tipoPagoId" class="control-label tamanyo_letra_labelp">Tipo de pago</label>
+                            <select class="form-control tamanyo_letra_inputp" name="tipoPagoId" #tipoPagoId="ngModel"
+                                [(ngModel)]="configPagosService.configPagoSeleccionado.tipoPagoId" required>
+                                <option *ngFor="let tp of tipoPagoService.tipoPagoList" [value]="tp.tipoPagoId">
+                                    {{tp.tipoPagoNombre}} </option>
+                            </select>
+                            <div class="validation-error text_campo_requerido" *ngIf="tipoPagoId.invalid && tipoPagoId.touched">Campo
+                                requerido</div>
+                        </div>
+                        <div class="form-grou col-md-2">
+                            <label for="" class="control-label tamanyo_letra_labelp">Tarifa (Q)</label>
+                            <input class="form-control tamanyo_letra_inputp" name="monto" #monto="ngModel"
+                                [(ngModel)]="configPagosService.configPagoSeleccionado.monto" placeholder="000.00"
+                                required>
+                            <div class="validation-error text_campo_requerido" *ngIf="monto.invalid && monto.touched">Campo requerido</div>
+                        </div>
+                        <div class="form-grou col-md-2">
+                            <label for="mora" class="control-label tamanyo_letra_labelp">Monto por mora (Q)</label>
+                            <input class="form-control tamanyo_letra_inputp" name="mora" #mora="ngModel"
+                                [(ngModel)]="configPagosService.configPagoSeleccionado.mora" placeholder="">
+                        </div>
+                        <div class="form-grou col-md-2">
+                            <label for="" class="control-label tamanyo_letra_labelp">Dia límite de pago</label>
+                            <input class="form-control tamanyo_letra_inputp" name="diaLimite" #diaLimite="ngModel"
+                                [(ngModel)]="configPagosService.configPagoSeleccionado.diaLimite" placeholder="">
+                            <!-- <div class="validation-error" *ngIf="diaLimite.invalid && diaLimite.touched">Campo requerido</div> -->
+                        </div>
+                        <div class="form-grou col-md-2">
+                            <div class="form-group">
+                                <label for="estadoId" class="control-label tamanyo_letra_labelp">Estado</label>
+                                <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                                    [(ngModel)]="configPagosService.configPagoSeleccionado.estadoId" id="estadoId"
+                                    required>
+                                    <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">
+                                        {{estado.CodEstadoNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="estadoId.invalid && estadoId.touched">Campo
+                                    requerido</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="form-grou col-md-9">
+
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button [disabled]="!configPagoForm.valid" type="submit" class="btn btn-block btn-success ">
+                                <i class="fas fa-save"></i>
+
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <!-- <button type="button" class="btn btn-block btn-info"
+                                (click)="listarConfigPagos()" (click)="open(content)">
+                                <i class="fas fa-eye"></i>                
+                            </button> -->
+                            <button type="button" class="btn btn-block btn-info" (click)="open(content)">
+                                <i class="fas fa-eye"></i> <!-- Ver pagos -->
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-warning"
+                                (click)="limpiarForm(configPagoForm)">
+                                <i class="fa fa-recycle"></i>
+                                <!-- Reset -->
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+<div class="row">
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="modal-title pull-left tamanyo_letra_titulo" id="modal-basic-title">Lista de tarifas</h4>
+                </div>
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <form class="config-form col-md-12" #listarCarJorForm="ngForm"
+                    (ngSubmit)='listarConfigPagos(listarCarJorForm)'>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="nivelId" class="control-label tamanyo_letra_labelp">Ciclo escolar</label>
+                                <select class="form-control tamanyo_letra_inputp" name="ciclo" #ciclo="ngModel"
+                                    [(ngModel)]="configPagosService.configPagoSeleccionado.ciclo">
+                                    <option *ngFor="let cic of cicloService.cicloList" [value]="cic.anio">{{cic.anio}}
+                                    </option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-md-6">
+                            <div class="form-group">
+                                <label for="nivelId" class="control-label tamanyo_letra_labelp">Nivel</label>
+                                <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                    [(ngModel)]="configPagosService.configPagoSeleccionado.nivelId">
+                                    
+                                    <option *ngFor="let nivel of nivelService.nivelList" [value]="nivel.nivelId">
+                                        {{nivel.nivelNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido
+                                </div>
+                                <!-- <select class="form-control" name="nivelId" #nivelId="ngModel"
+                                    [(ngModel)]="configPagosService.configPagoSeleccionado.nivelId"
+                                    (ngModelChange)="listarCarreraJornada($event)">
+                                    <option *ngFor="let nivel of nivelService.nivelList" [value]="nivel.nivelId">
+                                        {{nivel.nivelNombre}}</option>
+                                </select> -->
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group ">
+                                <button [disabled]="!listarCarJorForm.valid" type="submit"
+                                    class="btn btn-block btn-success ">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 table-responsive-sm" *ngIf="configPagosService.configPagoList">
+                    <table class="table table-sm table-hover">
+                        <thead class="">
+                            <tr>
+                                <th class="tamanyo_letra_labelp" scope="col">Ciclo escolar</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Carrera</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Tipo pago</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Tarifa</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Mora</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Dia límite</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Acciones</th>
+                                <!-- <th scope="col">Eliminar</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let conf of configPagosService.configPagoList">
+                                <td class="pull-left tamanyo_letra_inputp">{{ conf.ciclo }}</td>
+                                <td class="pull-left tamanyo_letra_inputp">{{ conf.carreraNombre }}
+                                    {{ conf.jornadaNombre }}</td>
+                                <td class="pull-left tamanyo_letra_inputp">{{ conf.tipoPagoNombre }}</td>
+                                <td class="pull-left tamanyo_letra_inputp">{{ conf.monto }}</td>
+                                <td class="pull-left tamanyo_letra_inputp">{{ conf.mora }}</td>
+                                <td class="pull-left tamanyo_letra_inputp">{{ conf.diaLimite }}</td>
+                                <td>
+                                    <a class="btn class=btn text-info tamanyo_letra_labelp"
+                                        style="margin-top: -7px;padding-left: 0px;" (click)="showForEdit(conf)" (click)="d('Cross click')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                                <!-- <td>
+                                    <a class="btn text-danger">Eliminar
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </ng-template>
+</div>
+<!-- inicio tabla -->
+<!-- <br>
+<div class="row" *ngIf="configPagosService.configPagoList"> -->
+<!-- <p> BUSCAR OTRA FORMA DE LLAMAR LA FUNCION LISTAR GRADOS POR CARRERA Y JORADA</p> -->
+
+<!-- <div class="col-md-12 table-responsive-sm">
+        <table class="table table-sm table-hover">
+            <thead class="">
+                <tr>
+                    <th scope="col">Ciclo escolar</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Tipo pago</th>
+                    <th scope="col">Tarifa</th>
+                    <th scope="col">Mora</th>
+                    <th scope="col">Dia límite</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let conf of configPagosService.configPagoList">
+                    <td>{{ conf.ciclo }}</td>
+                    <td>{{ conf.carreraNombre }} {{ conf.jornadaNombre }}</td>
+                    <td>{{ conf.tipoPagoNombre }}</td>
+                    <td>{{ conf.monto }}</td>
+                    <td>{{ conf.mora }}</td>
+                    <td>{{ conf.diaLimite }}</td>
+                    <td>
+                        <a class="btn" (click)="showForEdit(conf)">Editar
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn text-danger">Eliminar
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> -->

@@ -1,0 +1,850 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+  <div class="col-md-12">
+    <br>
+    <div class="row">
+      <div *ngIf ="childData.esHijo; then frmBuscaAlum else frmEncargado "></div>
+
+      <ng-template #frmBuscaAlum>
+        <!-- seccion para el alumno -->
+        <div class="col-md-4" >
+          <div class="box box-primary posicion-tope">
+            <div class="box-body box-profile">
+              <div class="img-container-div">
+                <img class="borde_redondeadoD img-container" *ngIf="!blnBanderafoto" style="text-align:center;"
+                  src="../../assets/img/user_2.jpg" alt="User profile picture">
+
+                <img class="borde_redondeadoD img-container" *ngIf="blnBanderafoto" style="text-align:center;"
+                  [src]="foto_alumno" alt="User profile picture">
+
+              </div>
+
+              <hr>
+              <p class="text-muted text-center" *ngIf=!childData.esHijo>
+                <button class="btn btn-primary btn-block" (click)="open(content)">
+                  Buscar alumno
+                </button>
+              </p>
+              <ul class="list-group list-group-unbordered ">
+                <li class="list-group-item tamanyo_letra_labelp">
+                  <b>Nombres: </b>
+                  <a class="pull-right tamanyo_letra_inputp">
+                    {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre1 }}
+                    {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre2 }}
+                    {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre3 }}
+                  </a>
+                </li>
+                <li class="list-group-item tamanyo_letra_labelp">
+                  <b>Apellidos:</b>
+                  <a class="pull-right tamanyo_letra_inputp">
+                    {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido1 }}
+                    {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido2
+                                                    }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido3 }}
+                  </a>
+                </li>
+                <li class="list-group-item tamanyo_letra_labelp">
+                  <b>Código MINEDUC:</b>
+                  <a class="pull-right tamanyo_letra_inputp">
+                    {{ registroAlumnoService.alumnoSeleccionado.codigoMineduc }}
+                  </a>
+                </li>
+                <li class="list-group-item tamanyo_letra_labelp">
+                  <b>Identificación:</b>
+                  <a class="pull-right tamanyo_letra_inputp">
+                    {{ registroAlumnoService.alumnoSeleccionado.identificacion }}
+                  </a>
+                </li>
+                <li class="list-group-item tamanyo_letra_labelp">
+                  <b>Dirección:</b>
+                  <a class="pull-right tamanyo_letra_inputp">
+                    {{ registroAlumnoService.alumnoSeleccionado.direccion }}
+                    {{ registroAlumnoService.alumnoSeleccionado.municipioNombre }}
+                    {{registroAlumnoService.alumnoSeleccionado.departamentoNombre }}
+                    {{ registroAlumnoService.alumnoSeleccionado.paisNombre}}
+                  </a>
+                </li>
+                <li class="list-group-item tamanyo_letra_labelp">
+                  <b>Telefonos:</b>
+                  <a class="pull-right tamanyo_letra_inputp">
+                    {{ registroAlumnoService.alumnoSeleccionado.telefono1 }}
+                    {{ registroAlumnoService.alumnoSeleccionado.telefono2 }}
+                  </a>
+                </li>
+              </ul>
+
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+
+        <!-- seccion para el encargado -->
+        <!-- hawkinicia_change 09/may/20 -->
+        <br>
+        <div class="col-md-8">
+          <div class="box box-primary posicion-tope" *ngIf="!this.childData.esInscripcion">
+            <div class="box-header with-border">
+              <h3 class="box-title">Datos del Encargado</h3>
+              <div class="box-tools pull-right">
+
+                <button type="button" class="btn btn-outline-primary" (click)="hide_sections(2)"
+                  [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_encargado2">
+                  <i class="fa fa-minus" *ngIf="!collapsed_json.second"></i>
+                  <i class="fa fa-plus" *ngIf="collapsed_json.second"></i>
+                </button>
+
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" id="apartado_encargado2" [ngbCollapse]="collapsed_json.second">
+              <div class="row pull-right">
+                <div class="col-md-12 " *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoId">
+                  <button class="btn btn-success" (click)="open(contentAgregaEncaParaAsociar)">
+                    <i class="fa fa-plus"></i>
+                  </button>
+
+                  <button class="btn btn-primary" (click)="open(contentBuscaEnca)">
+                    <i class="fa fa-search"></i>
+                  </button>
+                  <!-- </div> -->
+
+                </div>
+              </div>
+              <!-- fin del primer row -->
+
+              <div class="row ">
+                <div class="col-md-12">
+                  <br>
+                  <div class="row" *ngIf="encargadoService.encargadoList">
+                    <div class="col-md-12">
+                      <div class="col-md-12 table-responsive-sm ">
+                        <table class="table table-sm anotherhover table-striped" style="margin-left: 15px;">
+                          <thead class="tamanyo_letra_labelp">
+                            <tr>
+                              <th scope="col">Nombres</th>
+                              <th scope="col">Teléfonos</th>
+                              <th scope="col">E-mail</th>
+                              <th scope="col">Dirección</th>
+                              <th scope="col">Eliminar</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let enca1 of encargadoService.encargadoList  |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                                class="tamanyo_letra_inputp">
+                                <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                                  {{ enca1.encargadoApellido1 }} {{ enca1.encargadoApellido2 }}
+                                {{ enca1.encargadoApellido3 }}
+                                {{ enca1.encargadoNombre1 }} {{ enca1.encargadoNombre2 }} {{ enca1.encargadoNombre3 }}
+                              </td>
+                              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                                {{ enca1.telefono1 }} {{ enca1.telefono2 }}</td>
+                                <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                                  {{ enca1.email }} </td>
+                                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                                    {{ enca1.direccion }} {{ enca1.municipioNombre }} {{ enca1.departamentoNombre }} {{ enca1.paisNombre
+                                                                                                }}
+                              </td>
+                              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                                <a class="btn text-danger tamanyo_letra_labelp" (click)="pasarEncargadoAlModelo(enca1)"
+                                  (click)="asociarEncargado('2')">Eliminar
+                                  <i class="fas fa-edit"></i>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                                        [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                        </ngb-pagination>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoId>0" >
+                    <div class="col-md-12">
+                      <button class="btn btn-lg btn-success" (click)="continuarInscripcion()">
+                        Continuar inscripción</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- fin del segundo row -->
+            </div>
+            <!-- /.box-body -->
+
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- hawk_finicaliza_change 08/may/20 -->
+      </ng-template>
+
+      <ng-template #frmEncargado>
+        <!-- seccion para el encargado -->
+        <!-- hawkinicia_change 09/may/20 -->
+        <br>
+        <div class="col-md-12">
+          <div class="box box-primary " *ngIf="!this.childData.esInscripcion">
+            <div class="box-header with-border">
+              <h3 class="box-title">Datos del Encargado</h3>
+              <div class="box-tools pull-right">
+
+                <button type="button" class="btn btn-outline-primary" (click)="hide_sections(2)"
+                  [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_encargado2">
+                  <i class="fa fa-minus" *ngIf="!collapsed_json.second"></i>
+                  <i class="fa fa-plus" *ngIf="collapsed_json.second"></i>
+                </button>
+
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+
+            <div class="box-body" id="apartado_encargado2" [ngbCollapse]="collapsed_json.second">
+              <div class="row pull-left">
+
+                <form class="col-md-12" #encargadoForm="ngForm" (ngSubmit)='onSubmit(encargadoForm)'>
+                  <!-- Parámetros de control del servicio -->
+                  <!-- <input type="hidden" name="alumnoId" #alumnoId="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId"> -->
+                  <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+                    [(ngModel)]="encargadoService.encargadoSeleccionado.alumnoId">
+                  <input type="hidden" name="colegioId" #colegioId="ngModel"
+                    [(ngModel)]="encargadoService.encargadoSeleccionado.colegioId">
+                  <input type="hidden" name="encargadoId" #encargadoId="ngModel"
+                    [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoId">
+                  <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                    [(ngModel)]="encargadoService.encargadoSeleccionado.opcionDML">
+
+
+                  <div class="row">
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="alumnoNombre1">Primer nombre
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="encargadoNombre1" #encargadoNombre1="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoNombre1" placeholder="" required>
+                      <div class="validation-error" *ngIf="encargadoNombre1.invalid && encargadoNombre1.touched">Campo
+                        requerido</div>
+                    </div>
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="alumnoNombre2">Segundo nombre
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="encargadoNombre2" #encargadoNombre2="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoNombre2" placeholder="">
+                    </div>
+
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="alumnoApellido1">Primer apellido
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="encargadoApellido1" #encargadoApellido1="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoApellido1" placeholder="" required>
+                      <div class="validation-error" *ngIf="encargadoApellido1.invalid && encargadoApellido1.touched">
+                        Campo
+                        requerido</div>
+                    </div>
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="encargadoApellido2">Segundo apellido
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="encargadoApellido2" #encargadoApellido2="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoApellido2" placeholder="">
+                    </div>
+                  </div>
+                  <!-- fin datos personales 1 -->
+
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label class="tamanyo_letra_labelp" for="generoId">Género</label>
+                      <select class="form-control tamanyo_letra_inputp" name="generoId" #generoId="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.generoId" id="estado2" required>
+                        <option *ngFor="let g of generoService.generoList" [value]="g.generoId">{{g.generoNombre}}
+                        </option>
+                      </select>
+                      <div class="validation-error" *ngIf="generoId.invalid && generoId.touched">Campo requerido</div>
+                    </div>
+
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="telefono1">Teléfono
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="telefono1" #telefono1="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.telefono1" placeholder="">
+                    </div>
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="telefono2">Teléfono alterno
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="telefono2" #telefono2="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.telefono2" placeholder="">
+                    </div>
+                    <div class="form-grou col-md-3">
+                      <label class="tamanyo_letra_labelp" for="telefono2">Email
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="email" #email="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.email" placeholder=""
+                        [email]="registroAlumnoService.alumnoSeleccionado.email!==''">
+                      <div class="validation-error" *ngIf="email.errors?.email && email.touched">Correo inválido</div>
+                    </div>
+                  </div>
+                  <!-- fin row datos de contacto -->
+
+                  <div class="row">
+                    <div class="form-grou col-md-4">
+                      <label class="tamanyo_letra_labelp" for="direccion">Dirección de residencia
+                      </label>
+                      <input class="form-control tamanyo_letra_inputp" name="direccion" #direccion="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.direccion" placeholder="">
+                      <div class="validation-error" *ngIf="direccion.invalid && direccion.touched">Campo requerido
+                      </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label class="tamanyo_letra_labelp" for="paisId">Pais</label>
+                      <select class="form-control tamanyo_letra_inputp" name="paisId" #paisId="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.paisId" (ngModelChange)="listarDepartamento($event)"
+                        required>
+                        <option *ngFor="let pais of paisService.paisList" [value]="pais.paisId">{{pais.paisNombre}}
+                        </option>
+                      </select>
+                      <div class="validation-error" *ngIf="paisId.invalid && paisId.touched">Campo requerido</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label class="tamanyo_letra_labelp" for="departamentoId">Departamento</label>
+                      <select class="form-control tamanyo_letra_inputp" name="departamentoId" #departamentoId="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.departamentoId" (ngModelChange)="listarMunicipio($event)"
+                        required>
+                        <option *ngFor="let dep of departamentoService.departamentoList" [value]="dep.departamentoId">
+                          {{dep.departamentoNombre}}</option>
+                      </select>
+                      <div class="validation-error" *ngIf="departamentoId.invalid && departamentoId.touched">Campo
+                        requerido</div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label class="tamanyo_letra_labelp" for="municipioId">Municipio</label>
+                      <select class="form-control tamanyo_letra_inputp" name="municipioId" #municipioId="ngModel"
+                        [(ngModel)]="encargadoService.encargadoSeleccionado.municipioId" id="estado" required>
+                        <option *ngFor="let muni of municipioService.municipioList" [value]="muni.municipioId">
+                          {{muni.municipioNombre}}</option>
+                      </select>
+                      <div class="validation-error" *ngIf="municipioId.invalid && municipioId.touched">Campo requerido
+                      </div>
+                    </div>
+                    <div class="form-grou col-md-3">
+                      <div class="form-group">
+                        <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                        <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                          [(ngModel)]="encargadoService.encargadoSeleccionado.estadoId" required>
+                          <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                            {{est.CodEstadoNombre}}</option>
+                        </select>
+                        <div class="validation-error" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <br>
+                  <!-- inicio para los botones standar de semi-crud -->
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-4">
+                          </div>
+                          <div class="col-md-4">
+                          </div>
+                          <div class="col-md-4">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <button [disabled]="!encargadoForm.valid" type="submit"
+                                class="btn btn-block btn-success ">
+                                  <i class="fas fa-save"></i>
+                                  <!-- Enviar datos -->
+                                </button>
+
+                              </div>
+                              <div class="col-md-4">
+                                <button type="button" class="btn btn-block btn-info"
+                                (click)="open(contentBuscaEncaParaEdit)">
+
+                                  <i class="fas fa-search"></i>
+                                  <!-- Buscar alumno -->
+                                </button>
+
+                              </div>
+                              <div class="col-md-4">
+                                <button type="button" class="btn btn-block btn-warning"
+                                (click)="limpiarForm(encargadoForm)">
+                                  <i class="fas fa-recycle"></i>
+                                  <!-- Reset -->
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- fin para los botones standar de semi-crud -->
+
+                </form>
+              </div>
+              <!-- fin del primer row -->
+
+            </div>
+            <!-- /.box-body -->
+
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- hawk_finicaliza_change 08/may/20 -->
+      </ng-template>
+    </div>
+  </div>
+</div>
+<!-- Fin div principal -->
+
+
+<!-- MODALES ALUMNO Y ENCARGADO -->
+<!-- inicio row modal para buscar alumno si-->
+<div class="row">
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <!-- <h4 class="modal-title" id="modal-basic-title">Hi there!</h4> -->
+      <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarAlumno(busForm)'>
+        <div class="row">
+          <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+          <div class="form-grou col-md-10">
+            <input class="form-control" name="alumnoNombre1" #alumnoNombre1="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1"
+              placeholder="Ingrese un nombre o apellido" required>
+            <div class="validation-error" *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">Campo requerido</div>
+          </div>
+          <div class="form-grou col-md-2">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">Buscar alumno</button>
+          </div>
+        </div>
+      </form>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <p>Resultados de la busqueda</p> -->
+      <div class="col-md-12 table-responsive-sm" *ngIf="registroAlumnoService.alumnoList">
+        <table class="table table-sm anotherhover table-striped">
+          <thead class="tamanyo_letra_labelp">
+            <tr>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Seleccionar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alu of registroAlumnoService.alumnoList  |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                class="tamanyo_letra_inputp">
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ alu.alumnoApellido1 }} {{ alu.alumnoApellido2 }} {{ alu.alumnoApellido3 }}</td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ alu.alumnoNombre1 }} {{ alu.alumnoNombre2 }} {{ alu.alumnoNombre3 }} </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                <a class="btn text-info tamanyo_letra_labelp" (click)="d('Cross click')" (click)="verPerfilAlumno(alu)">Seleccionar
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                        [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>
+
+<!-- inicio row modal para buscar y asociar encargado si *ngIf="this.childData.esInscripcion"-->
+<div class="row" >
+  <ng-template #contentBuscaEnca let-c="close" let-d="dismiss">
+    <div class="modal-header">
+
+
+      <div class="row">
+        <div class="col-md-12" style="margin-left: 50%;">
+          <h2 class="modal-title" style=" text-align: center; color: #576778;" id="modal-basic-title">Asociar Encargado</h2>
+        </div>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="background-color: #F9FAFD">
+      <!-- <p>Resultados de la busqueda</p> -->
+      <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarEncargadoEnca(busForm)'>
+        <div class="row">
+          <input type="hidden" name="encargadoId" #encargadoId="ngModel"
+            [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoId">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="encargadoService.encargadoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="encargadoService.encargadoSeleccionado.opcionDML">
+          <div class="form-grou col-md-10">
+            <input class="form-control" name="encargadoNombre1" #encargadoNombre1="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoNombre1" placeholder="Ingrese un nombre o apellido"
+              required>
+            <div class="validation-error" *ngIf="encargadoNombre1.invalid && encargadoNombre1.touched">Campo requerido
+            </div>
+          </div>
+          <div class="form-grou col-md-2">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">Buscar encargado</button>
+          </div>
+        </div>
+      </form>
+      <div class="col-md-12 table-responsive-sm" *ngIf="encargadoService.encargadoList2">
+        <table class="table table-sm anotherhover table-striped">
+          <thead class="tamanyo_letra_labelp">
+            <tr>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Asociar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let enca2 of encargadoService.encargadoList2  |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                class="tamanyo_letra_inputp">
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ enca2.encargadoApellido1 }} {{ enca2.encargadoApellido2 }}</td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ enca2.encargadoNombre1   }} {{ enca2.encargadoNombre2   }} </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                <a class="btn text-success tamanyo_letra_labelp" (click)="pasarEncargadoAlModelo(enca2)" (click)="d('Cross click')"
+                  (click)="asociarEncargado('1')">Asociar
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                        [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>
+
+<!-- inicio row modal para buscar y editar encargado  *ngIf="this.childData.esInscripcion"-->
+<div class="row" >
+  <ng-template #contentBuscaEncaParaEdit let-c="close" let-d="dismiss">
+    <div class="modal-header">
+
+      <div class="row">
+        <div class="col-md-12" style="margin-left: 50%;">
+          <h2 class="modal-title" style=" text-align: center; color: #576778;" id="modal-basic-title">Buscar Encargados</h2>
+        </div>
+      </div>
+
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="background-color: #F9FAFD">
+      <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarEncargadoEnca(busForm)'>
+        <div class="row">
+          <input type="hidden" name="encargadoId" #encargadoId="ngModel"
+            [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoId">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="encargadoService.encargadoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="encargadoService.encargadoSeleccionado.opcionDML">
+          <div class="form-grou col-md-10">
+            <input class="form-control" name="encargadoNombre1" #encargadoNombre1="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoNombre1"
+              placeholder="Ingrese un nombre o apellido" required>
+            <div class="validation-error" *ngIf="encargadoNombre1.invalid && encargadoNombre1.touched">Campo requerido
+            </div>
+          </div>
+          <div class="form-grou col-md-2">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info"><i class="fa fa-search"></i>
+              Buscar encargado</button>
+          </div>
+        </div>
+      </form>
+      <!-- <p>Resultados de la busqueda</p> -->
+      <div class="col-md-12 table-responsive-sm" *ngIf="encargadoService.encargadoList2">
+        <table class="table table-sm anotherhover table-striped">
+          <thead class="tamanyo_letra_labelp">
+            <tr>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Editar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let enca2 of encargadoService.encargadoList2 |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize " class="tamanyo_letra_inputp">
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ enca2.encargadoApellido1 }} {{ enca2.encargadoApellido2 }}</td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ enca2.encargadoNombre1   }} {{ enca2.encargadoNombre2   }} </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                <a class="btn text-warning tamanyo_letra_labelp" (click)="pasarEncargadoAlModelo(enca2)" (click)="d('Cross click')">Editar
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                        [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>
+
+<!-- inicio row modal para buscar y editar encargado si *ngIf="this.childData.esInscripcion"-->
+<div class="row" >
+  <ng-template #contentAgregaEncaParaAsociar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+
+      <div class="row">
+        <div class="col-md-12" style="margin-left: 50%;">
+          <h2 class="modal-title" style=" text-align: center; color: #576778;" id="modal-basic-title">Agregar nuevo encargado</h2>
+        </div>
+      </div>
+
+
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="background-color: #F9FAFD">
+      <!-- <p>Resultados de la busqueda</p> -->
+      <div class="col-md-12 table-responsive-sm" *ngIf="true">
+
+        <div class="row" *ngIf="true">
+          <form class="col-md-12" #encargadoForm="ngForm" (ngSubmit)='onSubmit(encargadoForm)'>
+            <!-- Parámetros de control del servicio -->
+            <!-- <input type="hidden" name="alumnoId" #alumnoId="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId"> -->
+            <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.alumnoId">
+            <input type="hidden" name="colegioId" #colegioId="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.colegioId">
+            <input type="hidden" name="encargadoId" #encargadoId="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoId">
+            <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.opcionDML">
+            <input type="hidden" name="opcionInsert" #opcionInsert="ngModel"
+              [(ngModel)]="encargadoService.encargadoSeleccionado.opcionInsert">
+
+
+            <div class="row">
+              <div class="form-grou col-md-3">
+                <label class="tamanyo_letra_labelp" for="alumnoNombre1">Primer nombre
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="encargadoNombre1" #encargadoNombre1="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoNombre1" placeholder="" required>
+                <div class="validation-error" *ngIf="encargadoNombre1.invalid && encargadoNombre1.touched">Campo
+                  requerido</div>
+              </div>
+              <div class="form-grou col-md-3">
+                <label class="tamanyo_letra_labelp" for="alumnoNombre2">Segundo nombre
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="encargadoNombre2" #encargadoNombre2="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoNombre2" placeholder="">
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="alumnoApellido1">Primer apellido
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="encargadoApellido1" #encargadoApellido1="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoApellido1" placeholder="" required>
+                <div class="validation-error" *ngIf="encargadoApellido1.invalid && encargadoApellido1.touched">
+                  Campo
+                  requerido</div>
+              </div>
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="encargadoApellido2">Segundo apellido
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="encargadoApellido2" #encargadoApellido2="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.encargadoApellido2" placeholder="">
+              </div>
+            </div>
+            <!-- fin datos personales 1 -->
+
+            <div class="row">
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="generoId">Género</label>
+                <select class="form-control tamanyo_letra_inputp" name="generoId" #generoId="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.generoId" id="estado2" required>
+                  <option *ngFor="let g of generoService.generoList" [value]="g.generoId">{{g.generoNombre}}
+                  </option>
+                </select>
+                <div class="validation-error" *ngIf="generoId.invalid && generoId.touched">Campo requerido</div>
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="telefono1">Teléfono
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="telefono1" #telefono1="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.telefono1" placeholder="">
+              </div>
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="telefono2">Teléfono alterno
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="telefono2" #telefono2="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.telefono2" placeholder="">
+              </div>
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="telefono2">Email
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="email" #email="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.email" placeholder=""
+                  [email]="registroAlumnoService.alumnoSeleccionado.email!==''">
+                <div class="validation-error" *ngIf="email.errors?.email && email.touched">Correo inválido</div>
+              </div>
+            </div>
+            <!-- fin row datos de contacto -->
+
+            <div class="row">
+              <div class="form-group col-md-4">
+                <label class="tamanyo_letra_labelp" for="direccion">Dirección de residencia
+                </label>
+                <input class="form-control tamanyo_letra_inputp" name="direccion" #direccion="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.direccion" placeholder="">
+                <div class="validation-error" *ngIf="direccion.invalid && direccion.touched">Campo requerido
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label class="tamanyo_letra_labelp" for="paisId">Pais</label>
+                <select class="form-control tamanyo_letra_inputp" name="paisId" #paisId="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.paisId"
+                  (ngModelChange)="listarDepartamento($event)" required>
+                  <option *ngFor="let pais of paisService.paisList" [value]="pais.paisId">{{pais.paisNombre}}
+                  </option>
+                </select>
+                <div class="validation-error" *ngIf="paisId.invalid && paisId.touched">Campo requerido</div>
+              </div>
+              <div class="form-group col-md-4">
+                <label class="tamanyo_letra_labelp" for="departamentoId">Departamento</label>
+                <select class="form-control tamanyo_letra_inputp" name="departamentoId" #departamentoId="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.departamentoId"
+                  (ngModelChange)="listarMunicipio($event)" required>
+                  <option *ngFor="let dep of departamentoService.departamentoList" [value]="dep.departamentoId">
+                    {{dep.departamentoNombre}}</option>
+                </select>
+                <div class="validation-error" *ngIf="departamentoId.invalid && departamentoId.touched">Campo
+                  requerido</div>
+              </div>
+              <div class="form-group col-md-3">
+                <label class="tamanyo_letra_labelp" for="municipioId">Municipio</label>
+                <select class="form-control tamanyo_letra_inputp" name="municipioId" #municipioId="ngModel"
+                  [(ngModel)]="encargadoService.encargadoSeleccionado.municipioId" id="estado" required>
+                  <option *ngFor="let muni of municipioService.municipioList" [value]="muni.municipioId">
+                    {{muni.municipioNombre}}</option>
+                </select>
+                <div class="validation-error" *ngIf="municipioId.invalid && municipioId.touched">Campo requerido
+                </div>
+              </div>
+              <div class="form-group col-md-3">
+                <div class="form-group">
+                  <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                  <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                    [(ngModel)]="encargadoService.encargadoSeleccionado.estadoId" required>
+                    <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                      {{est.CodEstadoNombre}}</option>
+                  </select>
+                  <div class="validation-error" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- fin row direccion -->
+            <!-- fin row estado -->
+
+
+            <br>
+            <!-- <div class="row">
+              <div class="form-grou col-md-6">
+                <button [disabled]="!encargadoForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">
+                  <i class="fas fa-save"></i>
+                  Enviar datos
+                </button>
+              </div>
+              <div class="form-grou col-md-3">
+                <button type="button" class="btn btn-lg btn-block btn-info"
+                  (click)="open(contentBuscaEncaParaEdit)">Buscar</button>
+              </div>
+              <div class="form-grou col-md-3">
+                <button type="button" class="btn btn-lg btn-block btn-secundary"
+                  (click)="limpiarForm(encargadoForm)">Reset</button>
+              </div>
+            </div> -->
+
+            <!-- inicio para los botones standar de semi-crud -->
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <button [disabled]="!encargadoForm.valid" type="submit" class="btn btn-block btn-success ">
+                            <i class="fas fa-save"></i>
+                            <!-- Enviar datos -->
+                          </button>
+
+                        </div>
+                        <div class="col-md-4">
+                          <button type="button" class="btn btn-block btn-info" (click)="open(contentBuscaEncaParaEdit)">
+
+                            <i class="fas fa-search"></i>
+                            <!-- Buscar alumno -->
+                          </button>
+
+                        </div>
+                        <div class="col-md-4">
+                          <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(encargadoForm)">
+                            <i class="fas fa-recycle"></i>
+                            <!-- Reset -->
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- fin para los botones standar de semi-crud -->
+
+          </form>
+
+        </div>
+
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>

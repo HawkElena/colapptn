@@ -24,13 +24,18 @@
             "tsConfig": "tsconfig.app.json",
             "aot": false,
             "assets": [
-              "src/favicon.ico",
+              "src/school20.ico",
               "src/assets"
             ],
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/@types/BoxWidget/BoxWidget.js"
+              ,"node_modules/@types/BoxWidget/BoxRefresh.js"
+
+            ]
           },
           "configurations": {
             "production": {
@@ -84,7 +89,7 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/favicon.ico",
+              "src/school20.ico",
               "src/assets"
             ],
             "styles": [

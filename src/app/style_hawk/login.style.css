@@ -1,0 +1,14 @@
+
+.borde_redondeadotext{
+  /* border-radius: 200px 200px 200px 200px;
+  -moz-border-radius: 200px 200px 200px 200px;
+  -webkit-border-radius: 200px 200px 200px 200px; */
+  /* border: 0px; */
+    border-top-left-radius: 1.25rem !important;
+    border-top-right-radius: 1.25rem !important;
+    border-bottom-right-radius: 1.25rem !important;
+    border-bottom-left-radius: 1.25rem !important;
+    padding-left: 13px;
+    padding-right: 14px;
+
+}

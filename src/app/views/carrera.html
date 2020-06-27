@@ -1,0 +1,156 @@
+
+
+        <!-- <div class="breadcrumb-pagination">
+  
+            <div class="completed">
+              <span></span>
+              <p>Items in order</p>   
+            </div>
+          
+            <div class="active">
+              <span>2</span>
+              <p>Customer information</p>
+            </div>
+          
+            <div class="todo">
+              <span>3</span>
+              <p>Shipping</p>
+            </div>
+            
+          </div> -->
+    
+
+<!-- ---------------------------------------------- -->
+
+<div class="box box-primary">
+    <div class="box-header with-border">    
+        
+        <div class="row">
+            <div class="col-md-12">
+                <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="config-form col-md-12" #carreraForm="ngForm" (ngSubmit)='onSubmit(carreraForm)'>
+                    <h4 class=" tamanyo_letra_titulo"> {{ titulo }} </h4>
+
+                    <input type="hidden" name="carreraId" #carreraId="ngModel"
+                        [(ngModel)]="carreraService.carreraSeleccionado.carreraId">
+                    <input type="hidden" name="colegioId" #colegioId="ngModel"
+                        [(ngModel)]="carreraService.carreraSeleccionado.colegioId">
+                    <input type="hidden" name="opcionSelect" #opcionSelect="ngModel"
+                        [(ngModel)]="carreraService.carreraSeleccionado.opcionSelect">
+                    <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                        [(ngModel)]="carreraService.carreraSeleccionado.opcionDML">
+                    <div class="row">
+                        <div class="form-grou col-md-3">
+                            <label for="estado" class="tamanyo_letra_labelp">Nivel</label>
+                            <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                [(ngModel)]="carreraService.carreraSeleccionado.nivelId" required>
+                                <!-- funcion listar nivel -->
+                                <option *ngFor="let nivel of nivelService.nivelList" [value]="nivel.nivelId">
+                                    {{nivel.nivelNombre}}</option>
+                            </select>
+                            <div class="validation-error text_campo_requerido" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido
+                            </div>
+                        </div>
+                        <div class="form-grou col-md-3"
+                            [class.has-error]="carreraNombre.touched && carreraNombre.invalid">
+                            <label for="carreraNombre" class="tamanyo_letra_labelp">Carrera
+                            </label>
+                            <input class="form-control tamanyo_letra_inputp" name="carreraNombre" #carreraNombre="ngModel"
+                                [(ngModel)]="carreraService.carreraSeleccionado.carreraNombre" placeholder="Carrera"
+                                required>
+                            <div class="validation-error text_campo_requerido" *ngIf="carreraNombre.invalid && carreraNombre.touched">Campo
+                                requerido</div>
+                        </div>
+                        <div class="form-grou col-md-6">
+                            <div class="form-group">
+                                <label for="estado" class="tamanyo_letra_labelp" >Estado</label>
+                                <select class="form-control tamanyo_letra_inputp" name="estado" #estado="ngModel"
+                                    [(ngModel)]="carreraService.carreraSeleccionado.estado" id="estado" required>
+                                    <!-- estos parametros estadoId y CodEstadoNombre vienen del modelo estado y no del model carrera -->
+                                    <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">
+                                        {{estado.CodEstadoNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="estado.invalid && estado.touched">Campo requerido
+                                </div>
+                            </div>
+                            <!--contiene un select con la lista de estados en un componente distinto-->
+                            <!-- <estado></estado> -->
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="form-grou col-md-9">
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button [disabled]="!carreraForm.valid" type="submit" class="btn btn-block btn-success ">
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-info" (click)="listarCarrera()" (click)="open(content)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(carreraForm)">
+                                <i class="fa fa-recycle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inicio row modal -->
+<div class="row">
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title pull-left tamanyo_letra_titulo" id="modal-basic-title">Lista de niveles educativos
+            </h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12 table-responsive-sm" *ngIf="carreraService.carreraList">                   
+                    <table class="table table-sm table-hover">
+                        <thead class="">
+                            <tr>
+                                <th class="tamanyo_letra_labelp" scope="col">Carrera</th>                                
+                                <th class="tamanyo_letra_labelp" scope="col">Acciones</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let carrera of carreraService.carreraList">
+                                <td class="pull-left tamanyo_letra_inputp">{{ carrera.carreraNombre }}</td>                                
+                                <td>
+                                    <a class="btn text-info"
+                                        style="margin-top: -7px;padding-left: 0px;" (click)="d('Cross click')"
+                                        (click)="showForEdit(carrera)">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a class="btn" *ngIf="carrera.estado =='0'" [style.color]="'#808080'"                                       
+                                        (click)="bloqearDesbloquear(carrera)">
+                                        <i class="fa fa-ban"></i>
+                                    </a>
+                                    <a class="btn" *ngIf="carrera.estado =='1'" [style.color]="'#23B030'"                                        
+                                        (click)="bloqearDesbloquear(carrera)">
+                                        <i class="fa fa-check-circle"></i>
+                                    </a>   
+                                </td>                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </ng-template>
+</div>

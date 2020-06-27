@@ -1,0 +1,963 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+  <div class="col-md-12">
+    <ngb-tabset>
+      <!-- para agregar la pestaña de encargado -->
+      <ngb-tab title="Inscripciones">
+        <ng-template ngbTabContent>
+          <form>
+            <div class="row">
+              <div class="col-md-4">
+                <!-- <encargado [arreglo_a_recibir]="parentData"></encargado> -->
+                <buscar-alumno [arreglo_a_recibir]="parentData"
+                (output_data_enviar)= recibe_datos_alum($event)></buscar-alumno>
+
+              </div>
+              <div class="col-md-8 ">
+                <br>
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">{{ titulo }}</h3>
+                    <div class="box-tools pull-right">
+                      <!-- hawk inicia -->
+
+                      <button type="button" class="btn btn-outline-primary" (click)="hide_sections(1)"
+                        [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_inscripcion">
+                        <i class="fa fa-minus" *ngIf="!collapsed_json.first"></i>
+                        <i class="fa fa-plus" *ngIf="collapsed_json.first"></i>
+                      </button>
+                      <!-- hawk finaliza -->
+                    </div>
+                    <!-- /.box-tools -->
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body" id="apartado_inscripcion" [ngbCollapse]="collapsed_json.first">
+                    <ngb-tabset>
+                      <!-- para agregar la pestaña de encargado -->
+                      <ngb-tab title="Inscripciones">
+                        <ng-template ngbTabContent>
+                          <form class="col-md-12" #encargadoForm="ngForm" (ngSubmit)='onSubmit(encargadoForm)'>
+                            <input type="hidden" name="asignacionId" #asignacionId="ngModel"
+                              [(ngModel)]="inscripcionService.inscripcionSeleccionada.asignacionId">
+                            <input type="hidden" name="confirmada" #confirmada="ngModel"
+                              [(ngModel)]="inscripcionService.inscripcionSeleccionada.confirmada">
+                            <input type="hidden" name="reservada" #reservada="ngModel"
+                              [(ngModel)]="inscripcionService.inscripcionSeleccionada.reservada">
+                            <input type="hidden" name="esNuevo" #esNuevo="ngModel"
+                              [(ngModel)]="inscripcionService.inscripcionSeleccionada.esNuevo">
+                            <input type="hidden" name="aParvulos1" #aParvulos1="ngModel"
+                              [(ngModel)]="inscripcionService.inscripcionSeleccionada.aParvulos1">
+
+                            <div *ngIf="!blnTemplate_inscripcion_sig ; then inscripcion_actual else inscripcion_siguiente"></div>
+
+                            <ng-template #inscripcion_actual>
+                              <div class="row">
+                                <div class="form-grou col-md-4">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Ciclo escolar</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="ciclo" #ciclo="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSeleccionada.ciclo" required>
+                                      <option *ngFor="let cic of cicloService.cicloList" [value]="cic.anio">{{cic.anio}}</option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido</div>
+                                  </div>
+                                </div>
+                                <div class="form-grou col-md-6">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Nivel</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSeleccionada.nivelId" required
+                                      (ngModelChange)="listarCarreraJornada($event)">
+                                      <option *ngFor="let niv of nivelService.nivelList" [value]="niv.nivelId">{{niv.nivelNombre}}
+                                      </option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido
+                                    </div>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <div class="row">
+                                <div class="form-grou col-md-12">
+                                  <div class="form-group" [class.has-error]="carJorId.touched && carJorId.invalid">
+                                    <label class="tamanyo_letra_labelp control-label" for="carJorId">Carrera</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="carJorId" #carJorId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSeleccionada.carJorId" required
+                                      (ngModelChange)="listarCarreraJoranaGrado($event)">
+                                      <option *ngFor="let carJor of carreraJornadaService.carJorList" [value]="carJor.carJorId">
+                                        {{carJor.carreraNombre }} {{carJor.jornadaNombre}} </option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="carJorId.invalid && carJorId.touched">Campo requerido
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="form-grou col-md-4">
+                                  <label class="tamanyo_letra_labelp control-label" for="jcgId">Grado</label>
+                                  <select class="form-control tamanyo_letra_inputp" name="jcgId" #jcgId="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.jcgId" required>
+                                    <option *ngFor="let cjg of carJorGraService.carJorGraList" [value]="cjg.carJorGraId">
+                                      {{cjg.gradoNombre }}</option>
+                                  </select>
+                                  <div class="validation-error tamanyo_letra_inputp" *ngIf="jcgId.invalid && jcgId.touched">Campo requerido</div>
+                                </div>
+
+                                <div class="form-grou col-md-3">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Sección</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="seccionId" #seccionId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSeleccionada.seccionId" required>
+                                      <option *ngFor="let sec of seccionService.seccionList" [value]="sec.seccionId">
+                                        {{sec.seccionNombre}}</option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="seccionId.invalid && seccionId.touched">Campo
+                                      requerido
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="form-grou col-md-5">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSeleccionada.estadoId" required>
+                                      <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                                        {{est.CodEstadoNombre}}</option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="form-grou col-md-12">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Anotaciones</label>
+                                    <input class="form-control tamanyo_letra_inputp" name="descripcion" #descripcion="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSeleccionada.descripcion">
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <!-- inicio botones de inscripcion sig  -->
+                              <div class="row">
+                                <div class="form-group col-md-4">
+                                  <button [disabled]="!encargadoForm.valid" type="submit" class="btn  btn-block btn-success ">
+                                    <i class="fas fa-save"></i>
+                                    Guardar
+                                  </button>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                  <button type="button" class="btn btn-block btn-info" (click)="buscarInscripcionSiguiente()">
+                                    <i class="fa fa-address-card "></i>
+                                    Sig. Inscripcion
+                                  </button>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                  <button type="button" class="btn btn-block btn-info" (click)="open(content_det_inscripciones)">
+                                    <i class="fas fa-eye "></i>
+                                    Ver historial...
+                                  </button>
+                                </div>
+
+                              </div>
+                              <!-- inicio botones de inscripcion sig  -->
+                            </ng-template>
+
+
+                            <ng-template #inscripcion_siguiente>
+                              <!-- <h3> aca debe de ir todo lo de inscricpion siguiente</h3> -->
+                              <!-- hawk inicio sub-tab en el tab -->
+                              <div class="row" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoId">
+                                <form class="col-md-12" #inscSiguienteForm="ngForm" (ngSubmit)='onSubmitInscSig(inscSiguienteForm)'>
+                                  <input type="hidden" name="asignacionId" #asignacionId="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.asignacionId">
+                                  <input type="hidden" name="confirmada" #confirmada="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.confirmada">
+                                  <input type="hidden" name="reservada" #reservada="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.reservada">
+                                  <input type="hidden" name="esNuevo" #esNuevo="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.esNuevo">
+                                  <input type="hidden" name="aParvulos1" #aParvulos1="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.aParvulos1">
+                                  <input type="hidden" name="descripcion" #descripcion="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.descripcion">
+
+                                  <div class="row">
+                                    <div class="form-grou col-md-4">
+                                      <div class="form-group">
+                                        <label class="tamanyo_letra_labelp" for="estado">Ciclo escolar</label>
+                                        <select class="form-control tamanyo_letra_inputp" name="ciclo" #ciclo="ngModel"
+                                          [(ngModel)]="inscripcionService.inscripcionSiguiente.ciclo" (ngModelChange)="buscarInscripcionSiguiente()"
+                                          required>
+                                          <option *ngFor="let cic of cicloService.cicloSiguienteList" [value]="cic.anio">{{cic.anio}}
+                                          </option>
+                                        </select>
+                                        <div class="validation-error tamanyo_letra_inputp" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-grou col-md-6 " *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                                      <div class="form-group">
+                                        <label class="tamanyo_letra_labelp" for="estado">Nivel</label>
+                                        <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                          [(ngModel)]="inscripcionService.inscripcionSiguiente.nivelId" required
+                                          (ngModelChange)="listarCarreraJornada($event)">
+                                          <option *ngFor="let niv of nivelService.nivelList" [value]="niv.nivelId">{{niv.nivelNombre}}
+                                          </option>
+                                        </select>
+                                        <div class="validation-error tamanyo_letra_inputp" *ngIf="nivelId.invalid && nivelId.touched">Campo
+                                          requerido</div>
+                                      </div>
+                                    </div>
+
+                                  </div>
+
+                                  <div class="row" *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+
+                                    <div class="form-grou col-md-12">
+                                      <div class="form-group" [class.has-error]="carJorId.touched && carJorId.invalid">
+                                        <label for="carJorId" class="control-label tamanyo_letra_labelp">Carrera</label>
+                                        <select class="form-control tamanyo_letra_inputp" name="carJorId" #carJorId="ngModel"
+                                          [(ngModel)]="inscripcionService.inscripcionSiguiente.carJorId" required
+                                          (ngModelChange)="listarCarreraJoranaGrado($event)">
+                                          <option *ngFor="let carJor of carreraJornadaService.carJorList"
+                                                  [value]="carJor.carJorId">
+                                                  {{carJor.carreraNombre}} {{carJor.jornadaNombre}}
+                                          </option>
+                                        </select>
+                                        <div  class="validation-error tamanyo_letra_inputp"
+                                              *ngIf="carJorId.invalid && carJorId.touched">
+                                              Campo requerido</div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="row" *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                                    <div class="form-grou col-md-4">
+                                      <label for="jcgId" class="control-label tam tamanyo_letra_labelp">Grado</label>
+                                      <select class="form-control tamanyo_letra_inputp" name="jcgId" #jcgId="ngModel"
+                                        [(ngModel)]="inscripcionService.inscripcionSiguiente.jcgId" required>
+                                        <option *ngFor="let cjg of carJorGraService.carJorGraList" [value]="cjg.carJorGraId">{{cjg.gradoNombre
+                                                                                                                          }}</option>
+                                      </select>
+                                      <div class="validation-error tamanyo_letra_inputp" *ngIf="jcgId.invalid && jcgId.touched">Campo requerido
+                                      </div>
+                                    </div>
+
+                                    <div class="form-grou col-md-3">
+                                      <div class="form-group">
+                                        <label class="tamanyo_letra_labelp" for="estado">Sección</label>
+                                        <select class="form-control tamanyo_letra_inputp" name="seccionId" #seccionId="ngModel"
+                                          [(ngModel)]="inscripcionService.inscripcionSiguiente.seccionId" required>
+                                          <option *ngFor="let sec of seccionService.seccionList" [value]="sec.seccionId">
+                                            {{sec.seccionNombre}}</option>
+                                        </select>
+                                        <div class="validation-error tamanyo_letra_inputp" *ngIf="seccionId.invalid && seccionId.touched">Campo
+                                          requerido</div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-grou col-md-5">
+                                      <div class="form-group">
+                                        <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                                        <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                                          [(ngModel)]="inscripcionService.inscripcionSiguiente.estadoId" required>
+                                          <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                                            {{est.CodEstadoNombre}}</option>
+                                        </select>
+                                        <div class="validation-error tamanyo_letra_inputp" *ngIf="estadoId.invalid && estadoId.touched">Campo
+                                          requerido</div>
+                                      </div>
+                                    </div>
+
+
+                                    <div class="form-grou col-md-12">
+                                      <div class="form-group">
+                                        <label class="tamanyo_letra_labelp" for="estado">Anotaciones</label>
+                                        <input class="form-control tamanyo_letra_inputp" name="descripcion" #descripcion="ngModel"
+                                          [(ngModel)]="inscripcionService.inscripcionSiguiente.descripcion">
+                                      </div>
+                                    </div>
+
+
+                                  </div>
+
+                                  <div class="row">
+                                    <div class="form-grou col-md-4">
+                                      <button [disabled]="!inscSiguienteForm.valid" type="submit"
+                                              class="btn  btn-block btn-success ">
+                                        <i class="fas fa-save"></i>
+                                        Guardar
+                                      </button>
+                                    </div>
+
+                                    <div class="form-grou col-md-4">
+                                      <button type="button" class="btn btn-block btn-info" (click)="blnTemplate_inscripcion_sig=!blnTemplate_inscripcion_sig">
+                                        <i class="fa fa-hand-point-left "></i>
+                                        Inscripcion Actual
+                                      </button>
+
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                              <!-- hawk fin sub-tab en el tab -->
+                            </ng-template>
+
+                          </form>
+                        </ng-template>
+                      </ngb-tab>
+                      <ngb-tab title="Siguiente inscripcion" *ngIf="false">
+                        <ng-template ngbTabContent>
+                          <!-- hawk inicio sub-tab en el tab -->
+                          <div class="row" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoId">
+                            <form class="col-md-12" #inscSiguienteForm="ngForm" (ngSubmit)='onSubmitInscSig(inscSiguienteForm)'>
+                              <input type="hidden" name="asignacionId" #asignacionId="ngModel"
+                                [(ngModel)]="inscripcionService.inscripcionSeleccionada.asignacionId">
+                              <input type="hidden" name="confirmada" #confirmada="ngModel"
+                                [(ngModel)]="inscripcionService.inscripcionSeleccionada.confirmada">
+                              <input type="hidden" name="reservada" #reservada="ngModel"
+                                [(ngModel)]="inscripcionService.inscripcionSeleccionada.reservada">
+                              <input type="hidden" name="esNuevo" #esNuevo="ngModel"
+                                [(ngModel)]="inscripcionService.inscripcionSeleccionada.esNuevo">
+                              <input type="hidden" name="aParvulos1" #aParvulos1="ngModel"
+                                [(ngModel)]="inscripcionService.inscripcionSeleccionada.aParvulos1">
+                              <input type="hidden" name="descripcion" #descripcion="ngModel"
+                                [(ngModel)]="inscripcionService.inscripcionSeleccionada.descripcion">
+
+                              <div class="row">
+                                <div class="form-grou col-md-4">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Ciclo escolar</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="ciclo" #ciclo="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSiguiente.ciclo"
+                                      (ngModelChange)="buscarInscripcionSiguiente()" required>
+                                      <option *ngFor="let cic of cicloService.cicloSiguienteList" [value]="cic.anio">{{cic.anio}}
+                                      </option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido</div>
+                                  </div>
+                                </div>
+
+                                <div class="form-grou col-md-6 " *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                                  <div class="form-group">
+                                    <label  class="tamanyo_letra_labelp" for="estado">Nivel</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSiguiente.nivelId" required
+                                      (ngModelChange)="listarCarreraJornada($event)">
+                                      <option *ngFor="let niv of nivelService.nivelList" [value]="niv.nivelId">{{niv.nivelNombre}}
+                                      </option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido</div>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <div class="row" *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                                <!-- <div class="form-grou col-md-3">
+                                  <div class="form-group">
+                                    <label  class="tamanyo_letra_labelp" for="estado">Nivel</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSiguiente.nivelId" required
+                                      (ngModelChange)="listarCarreraJornada($event)">
+                                      <option *ngFor="let niv of nivelService.nivelList" [value]="niv.nivelId">{{niv.nivelNombre}}
+                                      </option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido</div>
+                                  </div>
+                                </div> -->
+                                <div class="form-grou col-md-12">
+                                  <div class="form-group" [class.has-error]="carJorId.touched && carJorId.invalid">
+                                    <label for="carJorId" class="control-label tamanyo_letra_labelp">Carrera</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="carJorId" #carJorId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSiguiente.carJorId" required
+                                      (ngModelChange)="listarCarreraJoranaGrado($event)">
+                                      <option *ngFor="let carJor of carreraJornadaService.carJorList" [value]="carJor.carJorId">{{carJor.carreraNombre
+                                                                    }} {{carJor.jornadaNombre}} </option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="carJorId.invalid && carJorId.touched">Campo requerido</div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row" *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                                <div class="form-grou col-md-4">
+                                  <label for="jcgId" class="control-label tam tamanyo_letra_labelp">Grado</label>
+                                  <select class="form-control tamanyo_letra_inputp" name="jcgId" #jcgId="ngModel"
+                                    [(ngModel)]="inscripcionService.inscripcionSiguiente.jcgId" required>
+                                    <option *ngFor="let cjg of carJorGraService.carJorGraList" [value]="cjg.carJorGraId">{{cjg.gradoNombre
+                                                                                              }}</option>
+                                  </select>
+                                  <div class="validation-error tamanyo_letra_inputp" *ngIf="jcgId.invalid && jcgId.touched">Campo requerido</div>
+                                </div>
+
+                                <div class="form-grou col-md-3">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Sección</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="seccionId" #seccionId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSiguiente.seccionId" required>
+                                      <option *ngFor="let sec of seccionService.seccionList" [value]="sec.seccionId">
+                                        {{sec.seccionNombre}}</option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="seccionId.invalid && seccionId.touched">Campo requerido</div>
+                                  </div>
+                                </div>
+
+                                <div class="form-grou col-md-5">
+                                  <div class="form-group">
+                                    <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                                    <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                                      [(ngModel)]="inscripcionService.inscripcionSiguiente.estadoId" required>
+                                      <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                                        {{est.CodEstadoNombre}}</option>
+                                    </select>
+                                    <div class="validation-error tamanyo_letra_inputp" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido</div>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <div class="row">
+                                <div class="form-grou col-md-6">
+                                  <button [disabled]="!inscSiguienteForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">
+                                    <i class="fas fa-save"></i>
+                                    Enviar datos
+                                  </button>
+                                </div>
+
+                                <div class="form-grou col-md-6">
+                                  <button type="button" class="btn btn-lg btn-block btn-info" (click)="buscarInscripcionSiguiente()">
+                                    Ver inscripción siguiente</button>
+                                </div>
+
+                              </div>
+                            </form>
+                          </div>
+                          <!-- hawk fin sub-tab en el tab -->
+                        </ng-template>
+                      </ngb-tab>
+                    </ngb-tabset>
+
+                  </div>
+                  <!-- /.box-body -->
+
+                </div>
+                <!-- /.box -->
+
+              </div>
+            </div>
+
+          </form>
+        </ng-template>
+      </ngb-tab>
+      <!-- fin para agregar la pestaña de encargado -->
+
+      <ngb-tab title="Inscripciones" *ngIf="false">
+        <ng-template ngbTabContent>
+          <br>
+
+          <div class="row">
+            <!-- seccion para el alumno -->
+            <div class="jumbotron bg-secondary text-white col-md-4">
+              <br>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h3>Alumno:</h3>
+                  </div>
+                  <div class="col-md-6">
+                    <button class="btn btn-lg btn-secundary" (click)="open(content)">
+                      <i class="fas fa-search"></i>
+                      Buscar alumno
+                    </button>
+                  </div>
+                </div>
+                <br>
+                <div class="row" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoApellido1">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <td>Nombres:</td>
+                        <td>
+                          {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre1 }}
+                          {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre2 }}
+                          {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre3 }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Apellidos:</td>
+                        <td>
+                          {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido1 }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido2
+                                                        }}
+                          {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido3 }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Código MINEDUC: </td>
+                        <td>{{ registroAlumnoService.alumnoSeleccionado.codigoMineduc }}</td>
+                      </tr>
+                      <tr>
+                        <td>Identificación: </td>
+                        <td>{{ registroAlumnoService.alumnoSeleccionado.identificacion }}</td>
+                      </tr>
+                      <tr>
+                        <td>Dirección: </td>
+                        <td>
+                          {{ registroAlumnoService.alumnoSeleccionado.direccion }}
+                          {{ registroAlumnoService.alumnoSeleccionado.municipioNombre }} {{
+                                                        registroAlumnoService.alumnoSeleccionado.departamentoNombre }} {{ registroAlumnoService.alumnoSeleccionado.paisNombre
+                                                        }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Telefonos: </td>
+                        <td>
+                          {{ registroAlumnoService.alumnoSeleccionado.telefono1 }}
+                          {{ registroAlumnoService.alumnoSeleccionado.telefono2 }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- seccion para la inscripcion actual -->
+            <div class="col-md-8" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoApellido1">
+              <br>
+              <h3>{{titulo}}</h3>
+              <!-- aqui va el formulario con los datos de la inscripcion actual -->
+              <div class="row">
+                <!-- <div class="form-grou col-md-12">
+                                        <h5>{{ mensaje }}</h5>
+                                    </div> -->
+                <form class="col-md-12" #encargadoForm="ngForm" (ngSubmit)='onSubmit(encargadoForm)'>
+                  <input type="hidden" name="asignacionId" #asignacionId="ngModel"
+                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.asignacionId">
+                  <input type="hidden" name="confirmada" #confirmada="ngModel"
+                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.confirmada">
+                  <input type="hidden" name="reservada" #reservada="ngModel"
+                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.reservada">
+                  <input type="hidden" name="esNuevo" #esNuevo="ngModel"
+                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.esNuevo">
+                  <input type="hidden" name="aParvulos1" #aParvulos1="ngModel"
+                    [(ngModel)]="inscripcionService.inscripcionSeleccionada.aParvulos1">
+                  <div class="row">
+                    <div class="form-grou col-md-12">
+                      <div class="form-group">
+                        <label for="estado">Ciclo escolar</label>
+                        <select class="form-control" name="ciclo" #ciclo="ngModel"
+                          [(ngModel)]="inscripcionService.inscripcionSeleccionada.ciclo" required>
+                          <option *ngFor="let cic of cicloService.cicloList" [value]="cic.anio">{{cic.anio}}</option>
+                        </select>
+                        <div class="validation-error" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-grou col-md-3">
+                      <div class="form-group">
+                        <label for="estado">Nivel</label>
+                        <select class="form-control" name="nivelId" #nivelId="ngModel"
+                          [(ngModel)]="inscripcionService.inscripcionSeleccionada.nivelId" required
+                          (ngModelChange)="listarCarreraJornada($event)">
+                          <option *ngFor="let niv of nivelService.nivelList" [value]="niv.nivelId">{{niv.nivelNombre}}
+                          </option>
+                        </select>
+                        <div class="validation-error" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-grou col-md-6">
+                      <div class="form-group" [class.has-error]="carJorId.touched && carJorId.invalid">
+                        <label for="carJorId" class="control-label">Carrera</label>
+                        <select class="form-control" name="carJorId" #carJorId="ngModel"
+                          [(ngModel)]="inscripcionService.inscripcionSeleccionada.carJorId" required
+                          (ngModelChange)="listarCarreraJoranaGrado($event)">
+                          <option *ngFor="let carJor of carreraJornadaService.carJorList" [value]="carJor.carJorId">
+                            {{carJor.carreraNombre }} {{carJor.jornadaNombre}} </option>
+                        </select>
+                        <div class="validation-error" *ngIf="carJorId.invalid && carJorId.touched">Campo requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-grou col-md-3">
+                      <label for="jcgId" class="control-label">Grado</label>
+                      <select class="form-control" name="jcgId" #jcgId="ngModel"
+                        [(ngModel)]="inscripcionService.inscripcionSeleccionada.jcgId" required>
+                        <option *ngFor="let cjg of carJorGraService.carJorGraList" [value]="cjg.carJorGraId">
+                          {{cjg.gradoNombre }}</option>
+                      </select>
+                      <div class="validation-error" *ngIf="jcgId.invalid && jcgId.touched">Campo requerido</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-grou col-md-3">
+                      <div class="form-group">
+                        <label for="estado">Sección</label>
+                        <select class="form-control" name="seccionId" #seccionId="ngModel"
+                          [(ngModel)]="inscripcionService.inscripcionSeleccionada.seccionId" required>
+                          <option *ngFor="let sec of seccionService.seccionList" [value]="sec.seccionId">
+                            {{sec.seccionNombre}}</option>
+                        </select>
+                        <div class="validation-error" *ngIf="seccionId.invalid && seccionId.touched">Campo requerido
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-grou col-md-3">
+                      <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select class="form-control" name="estadoId" #estadoId="ngModel"
+                          [(ngModel)]="inscripcionService.inscripcionSeleccionada.estadoId" required>
+                          <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                            {{est.CodEstadoNombre}}</option>
+                        </select>
+                        <div class="validation-error" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-grou col-md-6">
+                      <div class="form-group">
+                        <label for="estado">Anotaciones</label>
+                        <input class="form-control" name="descripcion" #descripcion="ngModel"
+                          [(ngModel)]="inscripcionService.inscripcionSeleccionada.descripcion">
+                      </div>
+                    </div>
+                    <!-- <div class="form-grou col-md-3">
+                                                <div class="form-group">
+                                                    <label  for="estado">Confirmar inscripción</label>
+                                                    <input type="checkbox" name="confirmada" #confirmada="ngModel" [(ngModel)]="inscripcionService.inscripcionSeleccionada.confirmada">
+                                                </div>
+                                            </div> -->
+                  </div>
+                  <div class="row">
+                    <div class="form-grou col-md-6">
+                      <button [disabled]="!encargadoForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">
+                        <i class="fas fa-save"></i>
+                        Enviar datos
+                      </button>
+                    </div>
+                    <div class="form-grou col-md-6">
+                      <button type="button" class="btn btn-lg btn-block btn-info"
+                        (click)="listarInscripcionesXAlu()">
+                      </button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+              <br>
+              <!-- aqui la tabla con el records de inscripciones -->
+              <div class="row" *ngIf="inscripcionService.inscripcionList2">
+                <div class="col-md-12">
+                  <div class="col-md-12 table-responsive-sm">
+                    <table class="table table-sm ">
+                      <thead class="">
+                        <tr>
+                          <th scope="col">Ciclo escolar</th>
+                          <th scope="col">Carrera</th>
+                          <th scope="col">Grado</th>
+                          <th scope="col">Jornada</th>
+                          <th scope="col">Sección</th>
+                          <th scope="col">Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let ins of inscripcionService.inscripcionList2 |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                          <td>{{ ins.ciclo }} </td>
+                          <td>{{ ins.carreraNombre }} </td>
+                          <td>{{ ins.gradoNombre   }} </td>
+                          <td>{{ ins.jornadaNombre }} </td>
+                          <td>{{ ins.seccionNombre }} </td>
+                          <td>{{ ins.estadoNombre }} </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                    </ngb-pagination>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-tab>
+
+      <!-- INICIO FORMULARIO PARA INGRESO DE LA SIGUIENTE INSCCRIPCION-->
+      <ngb-tab title="Siguiente inscripción" *ngIf="false">
+        <ng-template ngbTabContent>
+          <div class="row" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoId">
+            <form class="col-md-12" #inscSiguienteForm="ngForm" (ngSubmit)='onSubmitInscSig(inscSiguienteForm)'>
+              <input type="hidden" name="asignacionId" #asignacionId="ngModel"
+                [(ngModel)]="inscripcionService.inscripcionSeleccionada.asignacionId">
+              <input type="hidden" name="confirmada" #confirmada="ngModel"
+                [(ngModel)]="inscripcionService.inscripcionSeleccionada.confirmada">
+              <input type="hidden" name="reservada" #reservada="ngModel"
+                [(ngModel)]="inscripcionService.inscripcionSeleccionada.reservada">
+              <input type="hidden" name="esNuevo" #esNuevo="ngModel"
+                [(ngModel)]="inscripcionService.inscripcionSeleccionada.esNuevo">
+              <input type="hidden" name="aParvulos1" #aParvulos1="ngModel"
+                [(ngModel)]="inscripcionService.inscripcionSeleccionada.aParvulos1">
+              <input type="hidden" name="descripcion" #descripcion="ngModel"
+                [(ngModel)]="inscripcionService.inscripcionSeleccionada.descripcion">
+              <div class="row">
+                <div class="form-grou col-md-12">
+                  <div class="form-group">
+                    <label for="estado">Ciclo escolar</label>
+                    <select class="form-control" name="ciclo" #ciclo="ngModel"
+                      [(ngModel)]="inscripcionService.inscripcionSiguiente.ciclo"
+                      (ngModelChange)="buscarInscripcionSiguiente()" required>
+                      <option *ngFor="let cic of cicloService.cicloSiguienteList" [value]="cic.anio">{{cic.anio}}
+                      </option>
+                    </select>
+                    <div class="validation-error" *ngIf="ciclo.invalid && ciclo.touched">Campo requerido</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                <div class="form-grou col-md-3">
+                  <div class="form-group">
+                    <label for="estado">Nivel</label>
+                    <select class="form-control" name="nivelId" #nivelId="ngModel"
+                      [(ngModel)]="inscripcionService.inscripcionSiguiente.nivelId" required
+                      (ngModelChange)="listarCarreraJornada($event)">
+                      <option *ngFor="let niv of nivelService.nivelList" [value]="niv.nivelId">{{niv.nivelNombre}}
+                      </option>
+                    </select>
+                    <div class="validation-error" *ngIf="nivelId.invalid && nivelId.touched">Campo requerido</div>
+                  </div>
+                </div>
+                <div class="form-grou col-md-6">
+                  <div class="form-group" [class.has-error]="carJorId.touched && carJorId.invalid">
+                    <label for="carJorId" class="control-label">Carrera</label>
+                    <select class="form-control" name="carJorIds" #carJorIds="ngModel"
+                      [(ngModel)]="inscripcionService.inscripcionSiguiente.carJorId" required
+                      (ngModelChange)="listarCarreraJoranaGrado($event)">
+                      <option *ngFor="let carJor of carreraJornadaService.carJorList" [value]="carJor.carJorId">{{carJor.carreraNombre
+                                                    }} {{carJor.jornadaNombre}} </option>
+                    </select>
+                    <div class="validation-error" *ngIf="carJorId.invalid && carJorId.touched">Campo requerido</div>
+                  </div>
+                </div>
+                <div class="form-grou col-md-3">
+                  <label for="jcgId" class="control-label">Grado</label>
+                  <select class="form-control" name="jcgId" #jcgId="ngModel"
+                    [(ngModel)]="inscripcionService.inscripcionSiguiente.jcgId" required>
+                    <option *ngFor="let cjg of carJorGraService.carJorGraList" [value]="cjg.carJorGraId">{{cjg.gradoNombre
+                                                }}</option>
+                  </select>
+                  <div class="validation-error" *ngIf="jcgId.invalid && jcgId.touched">Campo requerido</div>
+                </div>
+              </div>
+              <div class="row" *ngIf="inscripcionService.inscripcionSiguiente.ciclo">
+                <div class="form-grou col-md-3">
+                  <div class="form-group">
+                    <label for="estado">Sección</label>
+                    <select class="form-control" name="seccionId" #seccionId="ngModel"
+                      [(ngModel)]="inscripcionService.inscripcionSiguiente.seccionId" required>
+                      <option *ngFor="let sec of seccionService.seccionList" [value]="sec.seccionId">
+                        {{sec.seccionNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="seccionId.invalid && seccionId.touched">Campo requerido</div>
+                  </div>
+                </div>
+
+                <div class="form-grou col-md-9">
+                  <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select class="form-control" name="estadoId" #estadoId="ngModel"
+                      [(ngModel)]="inscripcionService.inscripcionSiguiente.estadoId" required>
+                      <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                        {{est.CodEstadoNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido</div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="form-grou col-md-6">
+                  <button [disabled]="!inscSiguienteForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">
+                    <i class="fas fa-save"></i>
+                    Enviar datos
+                  </button>
+                </div>
+
+                <div class="form-grou col-md-6">
+                  <button type="button" class="btn btn-lg btn-block btn-info" (click)="buscarInscripcionSiguiente()">
+                    Ver inscripción siguiente</button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+        </ng-template>
+      </ngb-tab>
+
+
+    </ngb-tabset>
+  </div>
+
+  <!-- inicio row modal para buscar alumno -->
+  <div class="row">
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarAlumno(busForm)'>
+          <div class="row">
+            <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+            <input type="hidden" name="colegioId" #colegioId="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+            <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+            <div class="form-grou col-md-10">
+              <input class="form-control" name="alumnoNombre1" #alumnoNombre1="ngModel"
+                [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1"
+                placeholder="Ingrese un nombre o apellido" required>
+              <div class="validation-error" *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">Campo requerido</div>
+            </div>
+            <div class="form-grou col-md-2">
+              <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">Buscar alumno</button>
+            </div>
+          </div>
+        </form>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <p>Resultados de la busqueda</p> -->
+        <div class="col-md-12 table-responsive-sm">
+          <table class="table table-sm table-hover">
+            <thead class="">
+              <tr>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Nombres</th>
+                <th scope="col">Seleccionar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let alu of registroAlumnoService.alumnoList |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                <td>{{ alu.alumnoApellido1 }} {{ alu.alumnoApellido2 }} {{ alu.alumnoApellido3 }}</td>
+                <td>{{ alu.alumnoNombre1 }} {{ alu.alumnoNombre2 }} {{ alu.alumnoNombre3 }} </td>
+                <td>
+                  <a class="btn text-info" (click)="d('Cross click')" (click)="verPerfilAlumno(alu)">Seleccionar
+                    <i class="fas fa-edit"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                          [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </ng-template>
+  </div>
+  <!-- fin row modal para buscar alumno -->
+
+    <!-- inicio row modal para buscar inscripciones detalle -->
+    <div class="row">
+      <ng-template #content_det_inscripciones let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <div class="row">
+            <div class="col-md-12">
+              <h2 style=" text-align: center; color: #576778;">Historial de Inscripciones</h2>
+            </div>
+            <div class="col-md-12">
+              <h3 style="text-align: center; color: #17508C;">
+                {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido1 }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido2 }}
+                {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre1 }}  {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre2 }}
+              </h3>
+
+            </div>
+          </div>
+
+          <br>
+
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <!-- aqui la tabla con el records de inscripciones -->
+          <div class="row" *ngIf="inscripcionService.inscripcionList2">
+            <div class="col-md-12">
+              <div class="col-md-12 table-responsive-sm">
+                <table class="table table-sm table-hover ">
+                  <thead class="tamanyo_letra_labelp">
+                    <tr>
+                      <th scope="col">Ciclo escolar</th>
+                      <th scope="col">Carrera</th>
+                      <th scope="col">Grado</th>
+                      <th scope="col">Jornada</th>
+                      <th scope="col">Sección</th>
+                      <th scope="col">Estado</th>
+                      <th scope="col">Seleccionar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="tamanyo_letra_inputp"
+                        *ngFor="let ins of inscripcionService.inscripcionList2 |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">{{ ins.ciclo }} </td>
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">{{ ins.carreraNombre }} </td>
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">{{ ins.gradoNombre   }} </td>
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">{{ ins.jornadaNombre }} </td>
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">{{ ins.seccionNombre }} </td>
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">{{ ins.estadoNombre }} </td>
+                      <td [style.color]="ins.estadoId =='0'? '#CFD524':ins.estadoId==1?'#23B030':'#DA2A1B'">
+                        <div *ngIf="ins.estadoId=='1'; then Habilitado else noHabilitado"></div>
+                        <ng-template #Habilitado>
+                          <a class="btn text-info tamanyo_letra_labelp" style="margin-top: -7px;padding-left: 0px;"
+                          (click)="d('Cross click') ;ver_asignacion(ins)">Seleccionar
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        </ng-template>
+                        <ng-template #noHabilitado>
+                          --
+                        </ng-template>
+
+
+                      </td>
+
+
+
+                    </tr>
+
+                  </tbody>
+                </table>
+                <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                                [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                </ngb-pagination>
+              </div>
+            </div>
+          </div>
+          <!-- fin de la tabla para mostrar las inscripciones -->
+
+        </div>
+        <div class="modal-footer">
+        </div>
+      </ng-template>
+    </div>
+    <!-- fin del buscar inscripciones detalle -->
+
+  <!-- fin del segundo tab de inscripciones -->
+</div>
+<!-- Fin div principal -->

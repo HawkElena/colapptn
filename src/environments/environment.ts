@@ -4,7 +4,14 @@
 
 export const environment = {
   production: false
+  ,apiUrl:'http://localhost:4200'
 };
+
+
+// workaround environment config to get example working in stackblitz
+// export const environment = {
+//   apiUrl: 'http://localhost:4200'
+// };
 
 /*
  * For easier debugging in development mode, you can import the following file

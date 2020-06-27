@@ -1,0 +1,595 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+  <div class="col-md-12">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Datos generales</a>
+        <ng-template ngbNavContent>
+
+          <form class="col-md-12" style="margin-left: -15px;" #alumnoForm="ngForm" (ngSubmit)='onSubmit(alumnoForm)'>
+            <!-- row para el titulo y el boton que habre el modal de busqueda -->
+            <!-- <div class="row">
+              <div class="col-md-10">
+                <h1>{{ titulo }}</h1>
+              </div>
+              </div> -->
+            <!-- fin row titulo -->
+            <br>
+            <!-- seccion uno -->
+            <div class="box box-primary posicion-tope">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{ titulo }}</h3>
+
+                <div class="row " style="margin-top: 15px; margin-left: 5px;">
+                  <div class="col-md-4">
+
+                  </div>
+                  <div class="col-md-4">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <!-- <div class="row">  [ngSwitch]="colorSelec"> -->
+                        <div class="row" style="border: 2px; text-align: center;">
+
+                          <!-- activar nombres y Apellidos -->
+                          <!-- <div class="col-md3" *ngSwitchCase="'#2E2E22'"  [ngStyle]="{'background':'colorSelec','text-align': 'center'}" > -->
+                          <div class="col-md3" [ngStyle]="{'background': colorSelec.colorSelec1,'text-align': 'center','color':colorletra,
+                          'border-radius': '50px 50px 50px 50px'}">
+                            <a [routerLink]="" (click)="activar_wizar_(1)">
+                              <i class="fa fa-file-signature btn-lg" placement="top" ngbTooltip="Nombres y Apellidos"
+                              [ngStyle]="{'color':colorletra,'text-align': 'center'} ">
+                                <!-- <span class="badge badge-secondary" style="font-size: x-small !important;" >1</span> -->
+                                <br>
+                                <!-- <p class="d-none d-md-block" style="font-size: smaller">Nombres y Apellidos</p> -->
+                              </i>
+                            </a>
+                          </div>
+
+                          <!-- activar datos generales -->
+                          <!-- <div class="col-md3" *ngSwitchCase="'#2E222E'"  [ngStyle]="{'background':'colorSelec','text-align': 'center'}" > -->
+                            <div class="col-md3" [ngStyle]="{'background': colorSelec.colorSelec2,'text-align': 'center','color':colorletra,
+                            'border-radius': '50px 50px 50px 50px'}">
+                              <a [routerLink]="" (click)="activar_wizar_(2)">
+                                <i class="fa fa-address-card btn-lg" placement="top" ngbTooltip="Datos generales"
+                                [ngStyle]="{'color':colorletra,'text-align': 'center'} ">
+                                  <!-- <span class="badge badge-secondary" style="font-size: x-small !important;" >2</span> -->
+                                  <br>
+                                <!-- <p class="d-none d-md-block" style="font-size: smaller">Datos generales</p> -->
+
+                              </i></a>
+                          </div>
+
+                          <!-- ubicacion_geografica -->
+                          <div class="col-md3" [ngStyle]="{'background': colorSelec.colorSelec3,'text-align': 'center','color':colorletra,
+                          'border-radius': '50px 50px 50px 50px'}">
+                            <!-- <div class="col-md3" *ngSwitchCase="'#2E2222'"  [ngStyle]="{'background':'colorSelec','text-align': 'center'}" > -->
+                            <a [routerLink]="" (click)="activar_wizar_(3)">
+                              <i class="fa fa-map-marked-alt btn-lg" placement="top" ngbTooltip="Ubiacion geografica" [ngStyle]="{'color':colorletra,'text-align': 'center'} ">
+                                <!-- <span class="badge badge-secondary" style="font-size: x-small !important;" >3</span> -->
+                                <!-- <p class="d-none d-md-block" style="font-size: smaller">Ubicacion geografica</p> -->
+                              </i></a>
+
+                          </div>
+
+                          <!-- activar otros datos -->
+                          <div class="col-md3" [ngStyle]="{'background': colorSelec.colorSelec4,'text-align': 'center','color':colorletra,
+                          'border-radius': '50px 50px 50px 50px'}">
+                            <!-- <div class="col-md3" *ngSwitchCase="'#222E2E'"  [ngStyle]="{'background':'colorSelec','text-align': 'center'}" > -->
+                            <a [routerLink]="" (click)="activar_wizar_(4)">
+                              <i class="fa fa-money-check-alt btn-lg" placement="top" ngbTooltip="Otros datos"
+                              [ngStyle]="{'color':colorletra,'text-align': 'center'} ">
+                                <!-- <span class="badge badge-secondary" style="font-size: x-small !important;" >4</span> -->
+                                <br>
+                                <!-- <p class="d-none d-md-block" style="font-size: smaller">Otros datos</p> -->
+                              </i></a>
+                          </div>
+
+                        </div>
+
+                        <div class="row">
+
+                          <!-- <div class="progress d-none d-md-block" style="width: 618px;"> -->
+                            <div class="progress d-none d-md-block" style="width: 221px;">
+                            <div class="progress-bar " role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
+                              [ngStyle]="{'width':progreso_.porcentaje_,'background':'#A8D8B2'}">
+                              {{progreso_.strmensaje_}}
+                            </div>
+                          </div>
+
+                          <!-- sin badges es width 222 -->
+                          <!-- <div class="progress d-block d-sm-none d-none d-sm-block d-md-none " style="width: 222px;"> -->
+                            <!-- con badges es 273 -->
+                            <div class="progress d-block d-sm-none d-none d-sm-block d-md-none " style="width: 221px;">
+                            <div class="progress-bar" style="background:#A8D8B2;"   role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
+                              [ngStyle]="{'width':progreso_.porcentaje_noLG,'background':'#A8D8B2'}">
+                              {{progreso_.strmensaje_}}
+                            </div>
+                          </div>
+
+                        </div>
+                        <!-- fin del row -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+
+                  </div>
+
+                </div>
+
+
+                <div class="box-tools pull-right">
+                  <!-- hawk inicia -->
+                  <!-- <button [disabled]="!alumnoForm.valid" type="submit" class="btn tamanyo_letra_btnp  btn-success ">
+                    <i class="fas fa-save"></i>
+                  </button> -->
+                  <button type="button" class="btn btn-outline-primary" (click)="hide_sections(1)"
+                    [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_alumno">
+                    <i class="fa fa-minus" *ngIf="!collapsed_json.first"></i>
+                    <i class="fa fa-plus" *ngIf="collapsed_json.first"></i>
+                  </button>
+                  <!-- hawk finaliza -->
+                </div>
+                <!-- /.box-tools -->
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body" id="apartado_alumno" [ngbCollapse]="collapsed_json.first">
+                <!-- <form class="col-md-12" #alumnoForm="ngForm" (ngSubmit)='onSubmit(alumnoForm)'> -->
+                <!-- Parámetros de control del servicio -->
+                <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+                <input type="hidden" name="colegioId" #colegioId="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+                <input type="hidden" name="codigoMineduc" #codigoMineduc="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.codigoMineduc">
+                <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+                <input type="hidden" name="foto" #foto="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.foto">
+                <input type="hidden" name="foto" #foto="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.foto">
+                <input type="hidden" name="alumnoCarnet" #alumnoCarnet="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoCarnet">
+                <input type="hidden" name="descuento" #descuento="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.descuento">
+
+                <div class="row" *ngIf="activo1">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="form-group col-md-3 ">
+                        <label class="tamanyo_letra_labelp" for="alumnoNombre1">Primer nombre
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="alumnoNombre1" #alumnoNombre1="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1" placeholder="" required
+                          maxlength="20">
+                        <div class="validation-error campo_requerido"
+                          *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">*
+                        </div>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="alumnoNombre2">Segundo nombre
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="alumnoNombre2" #alumnoNombre2="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre2" placeholder=""
+                          maxlength="20">
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label class="tamanyo_letra_labelp" for="alumnoNombre3">Otros nombres
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="alumnoNombre3" #alumnoNombre3="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre3" placeholder=""
+                          maxlength="40">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="alumnoApellido1">Primer apellido
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="alumnoApellido1"
+                          #alumnoApellido1="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoApellido1" placeholder="" required
+                          maxlength="20">
+                        <div class="validation-error campo_requerido"
+                          *ngIf="alumnoApellido1.invalid && alumnoApellido1.touched">*
+                        </div>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="alumnoApellido2">Segundo apellido
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="alumnoApellido2"
+                          #alumnoApellido2="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoApellido2" placeholder=""
+                          maxlength="20">
+                      </div>
+
+                      <div class="form-group col-md-6">
+                        <label class="tamanyo_letra_labelp" for="alumnoApellido3">Apellido de casada
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="alumnoApellido3"
+                          #alumnoApellido3="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoApellido3" placeholder=""
+                          maxlength="20">
+                      </div>
+
+                      <div class="form-group col-md-6 offset-md-4 " style="text-align: center;">
+                        <button type="button" class="btn " (click)="activar_wizar_(2)"
+                        [ngStyle]="{'background': colorActivo,'color':colorletra,'margin-left': '90px'}" >
+                          <i class="fas fa-arrow-circle-right"> Paso 2</i>
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+
+                </div>
+                <!-- fin datos personales 1 -->
+
+                <div class="row" *ngIf="activo2">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="identificacion">Identificación
+                        </label>
+                        <input type="number" class="form-control tamanyo_letra_inputp " name="identificacion"
+                          #identificacion="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.identificacion" placeholder="DPI-CUI"
+                          required maxlength="13">
+                        <div class="validation-error" *ngIf="identificacion.invalid && identificacion.touched">Campo
+                          requerido
+                        </div>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="generoId">Género</label>
+                        <select class="form-control tamanyo_letra_inputp" name="generoId" #generoId="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.generoId" required>
+                          <option *ngFor="let g of generoService.generoList" [value]="g.generoId">{{g.generoNombre}}
+                          </option>
+                        </select>
+                        <div class="validation-error" *ngIf="generoId.invalid && generoId.touched">Campo requerido
+                        </div>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="fechaNacimiento">Fecha de nacimiento
+                        </label>
+                        <div class="input-group">
+                          <input type="date" class="form-control tamanyo_letra_inputp" placeholder=""
+                            name="fechaNacimiento" #fechaNacimiento="ngModel"
+                            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.fechaNacimiento">
+                        </div>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="telefono1">Teléfono
+                        </label>
+                        <input type="number" class="form-control tamanyo_letra_inputp" name="telefono1"
+                          #telefono1="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.telefono1"
+                          placeholder="" max="8">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="telefono2">Teléfono alterno
+                        </label>
+                        <input type="number" class="form-control tamanyo_letra_inputp" name="telefono2"
+                          #telefono2="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.telefono2"
+                          placeholder="" max="08">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label class="tamanyo_letra_labelp" for="telefono2">Email
+                        </label>
+                        <input class="form-control tamanyo_letra_inputp" name="email" #email="ngModel"
+                          [(ngModel)]="registroAlumnoService.alumnoSeleccionado.email" placeholder=""
+                          [email]="registroAlumnoService.alumnoSeleccionado.email!==''" maxlength="20">
+                        <!-- <div class="validation-error" *ngIf="email.errors?.required && email.touched">Campo requerido</div> -->
+                        <div class="validation-error" *ngIf="email.errors?.email && email.touched">Correo inválido</div>
+                      </div>
+
+                      <div class="form-group col-md-6 offset-md-4 " style="text-align: center;">
+                        <button type="button" class="btn " (click)="activar_wizar_(1)"
+                        [ngStyle]="{'background': colorInactivo,'color':colorletra}">
+                          <i class="fas fa-arrow-circle-left"> Paso 1</i>
+                        </button>
+
+                        <button type="button" class="btn  " (click)="activar_wizar_(3)"
+                        [ngStyle]="{'background': colorSelec.colorSelec1,'color':colorletra}">
+                          <i class="fas fa-arrow-circle-right"> Paso 3</i>
+                        </button>
+                      </div>
+
+
+                    </div>
+                  </div>
+                  <!-- <div class="form-group  row">
+                    <div class="col-md-12">
+                      <div class="col-md-3">
+                        <button type="button" class="btn btn-warning  fa fa-arrow-circle-left">
+
+                        </button>
+                      </div>
+                      <div class="col-md-3">
+                        a
+                      </div>
+                      <div class="col-md-3">
+                        a
+                      </div>
+                      <div class="col-md-3">
+
+                        <button type="button" class="btn btn-success fa fa-arrow-circle-right">
+
+                        </button>
+                      </div>
+                    </div>
+                  </div> -->
+
+
+                </div>
+                <!-- fin class row datps personales2 -->
+
+                <div class="row" *ngIf="activo3">
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="direccion">Dirección de residencia
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="direccion" #direccion="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.direccion" placeholder="" required
+                      maxlength="100">
+                    <div class="validation-error" *ngIf="direccion.invalid && direccion.touched">Campo requerido
+                    </div>
+                  </div>
+                  <!-- fin row direccion -->
+
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="paisId">Pais</label>
+                    <select class="form-control tamanyo_letra_inputp" name="paisId" #paisId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.paisId"
+                      (ngModelChange)="listarDepartamento($event)" required>
+                      <option class="tamanyo_letra_inputp" *ngFor="let pais of paisService.paisList"
+                        [value]="pais.paisId">{{pais.paisNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="paisId.invalid && paisId.touched">Campo requerido</div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="departamentoId">Departamento</label>
+                    <select class="form-control tamanyo_letra_inputp" name="departamentoId" #departamentoId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.departamentoId"
+                      (ngModelChange)="listarMunicipio($event)" required>
+                      <option class="tamanyo_letra_inputp" *ngFor="let dep of departamentoService.departamentoList"
+                        [value]="dep.departamentoId">
+                        {{dep.departamentoNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="departamentoId.invalid && departamentoId.touched">Campo
+                      requerido
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="municipioId">Municipio</label>
+                    <select class="form-control tamanyo_letra_inputp" name="municipioId" #municipioId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.municipioId" required>
+                      <option class="tamanyo_letra_inputp" *ngFor="let muni of municipioService.municipioList"
+                        [value]="muni.municipioId">
+                        {{muni.municipioNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="municipioId.invalid && municipioId.touched">Campo requerido
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                    <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.estadoId" required>
+                      <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                        {{est.CodEstadoNombre}}</option>
+                      <!-- <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">{{estado.CodEstadoNombre}}</option> -->
+                    </select>
+                    <div class="validation-error" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido
+                    </div>
+
+                  </div>
+
+                  <div class="form-group col-md-6 offset-md-4 " style="text-align: center;">
+                    <button type="button" class="btn " (click)="activar_wizar_(2)"
+                      [ngStyle]="{'background': colorInactivo,'color':colorletra}">
+                      <i class="fas fa-arrow-circle-left"> Paso 2</i>
+                    </button>
+
+                    <button type="button" class="btn  " (click)="activar_wizar_(4)"
+                    [ngStyle]="{'background': colorSelec.colorSelec1,'text-align': 'center','color':colorletra}">
+                      <i class="fas fa-arrow-circle-right"> Paso 4</i>
+                    </button>
+                  </div>
+                </div>
+                <!-- fin de ubicacion_geografica -->
+
+                <!-- inicio otros datos -->
+                <div class="row" *ngIf="activo4">
+
+                  <div class="form-group col-md-6">
+                    <label class="tamanyo_letra_labelp" for="codigoMineduc">Código MINEDUC
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="codigoMineduc" #codigoMineduc="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.codigoMineduc">
+                  </div>
+
+                  <div class="form-grou col-md-6">
+                    <label class="tamanyo_letra_labelp" for="alumnoCarnet">Carnet
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp" name="alumnoCarnet"
+                      #alumnoCarnet="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoCarnet"
+                      placeholder="">
+                  </div>
+                  <br>
+                  <hr>
+                  <div class="form-group col-md-12">
+                    <label class="tamanyo_letra_labelp" for="descuento">Descuento (Q)
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp" name="descuento" #descuento="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.descuento"
+                      placeholder="Descuento que le hará a las tarifas de colegiaturas. Ejemplo (50.00)">
+                  </div>
+
+                  <div class="form-group col-md-6 offset-md-4 " style="text-align: center;">
+                    <button type="button" class="btn " (click)="activar_wizar_(3)"
+                    [ngStyle]="{'background': colorInactivo,'color':colorletra,'margin-right': '90px'}">
+                      <i class="fas fa-arrow-circle-left"> Paso 3</i>
+                    </button>
+
+                  </div>
+                </div>
+                <!-- fin de otros datos -->
+
+                <!-- botones de accion nuevo, gragar y buscar -->
+                <div class="row">
+                  <div class="col-md-4">
+
+                    <button [disabled]="!alumnoForm.valid && !activo4" type="submit" class="btn btn-block btn-success ">
+                      <i class="fas fa-save"></i>
+                      <!-- Enviar datos -->
+                    </button>
+
+                  </div>
+                  <div class="col-md-4">
+                    <button class="btn btn-block btn-info " (click)="open(content)">
+                      <i class="fas fa-search"></i>
+                      <!-- Buscar alumno -->
+                    </button>
+
+                  </div>
+                  <div class="col-md-4">
+
+                    <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(alumnoForm)">
+                      <i class="fas fa-recycle"></i>
+                      <!-- Reset -->
+                    </button>
+                  </div>
+                </div>
+
+                <!-- </form> -->
+              </div>
+              <!-- /.box-body -->
+
+            </div>
+            <!-- /.box -->
+
+          </form>
+
+        </ng-template>
+      </li>
+
+      <li [ngbNavItem]="3">
+        <a ngbNavLink>Agregar encargado</a>
+        <ng-template ngbNavContent>
+          <form>
+            <!-- <h3>hawkkkkkk</h3> -->
+            <!-- <encargado [childExample]= "parentExample" ></encargado> -->
+            <encargado [arreglo_a_recibir]="parentData"></encargado>
+          </form>
+        </ng-template>
+      </li>
+
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  </div>
+</div>
+<!-- fin row del formulario de registro de alumnos -->
+
+<!-- inicio row modal de busqueda -->
+<div class="row">
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <!-- <h4 class="modal-title" id="modal-basic-title">Hi there!</h4> -->
+      <div class="row">
+        <div class="col-md-12" style="margin-left: 50%;">
+          <h2 class="modal-title" style=" text-align: center; color: #576778;" id="modal-basic-title">Busqueda de Alumos</h2>
+        </div>
+      </div>
+
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+    </div>
+    <div class="modal-body" style="background-color: #F9FAFD">
+      <!-- <p>Resultados de la busqueda</p> -->
+      <!-- <div style="margin:20px;">
+        <table>
+           <tr *ngFor="let item of items | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+             <td>{{item.Name}}</td>
+
+
+           </tr>
+        </table>
+        <ngb-pagination [collectionSize]="items.length" [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+      </div> -->
+      <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarAlumno(busForm)'>
+        <div class="row">
+          <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+          <div class="form-group col-md-10">
+            <input class="form-control" name="alumnoNombre1" #alumnoNombre1="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1"
+              placeholder="Ingrese primer nombre o apellido" required>
+            <div class="validation-error" *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">Campo requerido
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">
+              <i class="fa fa-search"></i>Buscar</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="col-md-12 table-responsive-sm">
+        <table class="table table-sm anotherhover table-striped">
+          <thead class="tamanyo_letra_labelp">
+            <tr>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alu of registroAlumnoService.alumnoList |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                  class="tamanyo_letra_inputp">
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                {{ alu.alumnoApellido1 }} {{ alu.alumnoApellido2 }} {{ alu.alumnoapellido3 }}
+              </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                {{ alu.alumnoNombre1 }} {{ alu.alumnoNombre2 }} {{ alu.alumnoNombre3 }}
+              </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                <a class="btn tamanyo_letra_labelp" (click)="d('Cross click')" (click)="showForEdit(alu)">Editar
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                <a class="btn text-danger tamanyo_letra_labelp">Eliminar
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                        [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+  <div class="col-md-6">
+            <div style="text-align: center">
+                <h3 class="jumbotron bg-secondary text-white">Registro de usuarios</h3>
+            </div>
+
+        <form class="config-form col-md-12" #loginForm="ngForm" (ngSubmit)='login()'>
+            <div class="row">
+                <div class="form-grou col-md-12">
+                    <input class="form-control" name="usuario" #usuario="ngModel" [(ngModel)]="userServices.usuarioSeleccionado.usuario" placeholder="Usuario" required>
+                    <div class="validation-error" *ngIf="usuario.invalid && usuario.touched">Este campo es requerido</div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="form-grou col-md-12">
+                    <input class="form-control" type="password" name="password" #password="ngModel" [(ngModel)]="userServices.usuarioSeleccionado.password" placeholder="Password" required>
+                    <div class="validation-error" *ngIf="password.invalid && password.touched">Este campo es requerido</div>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+                <div class="form-grou col-md-12">
+                    <button [disabled]="!loginForm.valid" type="submit" class="btn btn-lg btn-block btn-success">Login</button>
+                </div>
+                <!-- <div class="form-grou col-md-4">
+                    <button type="button" class="btn btn-lg btn-block btn-secundary" (click)="resetForm(loginForm)">Reset</button>
+                </div> -->
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+
+  <!--
+                <div class="form-grou col-md-6">
+                    <input class="form-control" name="primerNombre" #primerNombre="ngModel" [(ngModel)]="user.primerNombre" placeholder="Primer nombre" required>
+                    <div class="validation-error" *ngIf="nombreNivel.invalid && nombreNivel.touched">Este campo es requerido</div>
+                </div>
+                <div class="form-grou col-md-6">
+                    <input class="form-control" name="apellido" #apellido="ngModel" [(ngModel)]="user.apellido" placeholder="Apellido" required>
+                        <div class="validation-error" *ngIf="nombreNivel.invalid && nombreNivel.touched">Este campo es requerido</div>
+                </div> -->

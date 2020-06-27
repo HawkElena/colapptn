@@ -1,0 +1,432 @@
+<div class="row">
+  <div class="col-md-12">
+    <!-- <ngb-tabset>
+          <ngb-tab title="Datos generales">
+            <ng-template ngbTabContent> -->
+    <form class="col-md-12" style="margin-left: -15px;" #empleadoForm="ngForm" (ngSubmit)='onSubmit(empleadoForm)'>
+      <!-- row para el titulo y el boton que habre el modal de busqueda -->
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="tamanyo_letra_titulo">{{ titulo }}</h3>
+        </div>
+      </div>
+      <!-- fin row titulo -->
+      <br>
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <!-- <h3 class="box-title">{{ titulo }}</h3> -->
+          <h3 class="box-title">Información general</h3>
+          <div class="box-tools pull-right">
+            <!-- hawk inicia -->
+            <button type="button" class="btn btn-outline-primary" (click)="hide_sections(1)"
+              [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_alumno">
+              <i class="fa fa-minus" *ngIf="!collapsed_json.first"></i>
+              <i class="fa fa-plus" *ngIf="collapsed_json.first"></i>
+            </button>
+            <!-- hawk finaliza -->
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" id="apartado_empleado" [ngbCollapse]="collapsed_json.first">
+          <!-- <form class="col-md-12" #alumnoForm="ngForm" (ngSubmit)='onSubmit(alumnoForm)'> -->
+          <!-- Parámetros de control del servicio -->
+          <input type="hidden" name="id" #id="ngModel" 
+          [(ngModel)]="empleadoService.empleadoSeleccionado.id">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.opcionDML">
+          <input type="hidden" name="img" #img="ngModel" 
+          [(ngModel)]="empleadoService.empleadoSeleccionado.img">
+          <input type="hidden" name="opcionConsulta" #opcionConsulta="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.opcionConsulta">
+          <input type="hidden" name="estadoId" #estadoId="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.estadoId">
+          <input type="hidden" name="fechaIngreso" #fechaIngreso="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.fechaIngreso">
+          <input type="hidden" name="fechaModificacion" #fechaModificacion="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.fechaModificacion">
+
+          <div class="row">
+            <div class="form-group col-md-3 ">
+              <label class="tamanyo_letra_labelp" for="nombre1">Primer nombre
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="nombre1" #nombre1="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.nombre1" placeholder="" maxlength="20">
+              <div class="validation-error campo_requerido" *ngIf="nombre1.invalid && nombre1.touched">* Capo requerido
+              </div>
+            </div>
+
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="nombre2">Segundo nombre
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="nombre2" #nombre2="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.nombre2" placeholder="" maxlength="20">
+            </div>
+
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="apellido1">Primer apellido
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="apellido1" #apellido1="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.apellido1" placeholder=""  maxlength="20">
+              <!-- <div class="validation-error campo_requerido" *ngIf="apellido1.invalid && apellido1.touched">* Campo requerido
+              </div> -->
+            </div>
+
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="apellido2">Segundo apellido
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="apellido2" #apellido2="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.apellido2" placeholder="" maxlength="20">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="genero">Género</label>
+              <select class="form-control tamanyo_letra_inputp" name="genero" #genero="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.genero" id="genero" >
+                <option *ngFor="let g of generoService.generoList" [value]="g.generoId">{{g.generoNombre}}
+                </option>
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="genero.invalid && genero.touched">Campo requerido
+              </div> -->
+            </div>
+          </div>
+          <!-- fin datos personales 1 -->
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Identificación y contacto</h3>
+          <div class="box-tools pull-right">
+            <!-- hawk inicia -->
+            <button type="button" class="btn btn-outline-primary" (click)="hide_sections(2)"
+              [attr.aria-expanded]="!collapsed_json.second" aria-controls="datos_persoanles1">
+              <i class="fa fa-minus" *ngIf="!collapsed_json.second"></i>
+              <i class="fa fa-plus" *ngIf="collapsed_json.second"></i>
+            </button>
+            <!-- hawk finaliza -->
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" id="identificacion_contacto" [ngbCollapse]="collapsed_json.second">
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="identificacion">Identificación (DPI-CUI)
+              </label>
+              <input class="form-control tamanyo_letra_inputp " name="cui" #cui="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.cui" >
+              <!-- <div class="validation-error campo_requerido" *ngIf="cui.invalid && cui.touched">Campo
+                requerido
+              </div> -->
+            </div>
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="fechaNacimiento">Fecha de nacimiento
+              </label>
+              <div class="input-group">
+                <input type="date" class="form-control tamanyo_letra_inputp" name="fechaNacimiento"
+                  #fechaNacimiento="ngModel" [(ngModel)]="empleadoService.empleadoSeleccionado.fechaNacimiento" >
+              </div>
+              <!-- <div class="validation-error campo_requerido" *ngIf="cui.invalid && cui.touched">Campo
+                requerido
+              </div> -->
+            </div>
+
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="identificacion">NIT
+              </label>
+              <input class="form-control tamanyo_letra_inputp" class="form-control tamanyo_letra_inputp " name="nit"
+                #nit="ngModel" [(ngModel)]="empleadoService.empleadoSeleccionado.nit" placeholder="" 
+                maxlength="13">
+            </div>
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="telefono1">Teléfono
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="telefono1" #telefono1="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.telefono1" max="8">
+            </div>
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="telefono2">Teléfono alterno
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="telefono2" #telefono2="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.telefono2" max="08">
+            </div>
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="telefono2">Email
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="email" #email="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.email" placeholder=""
+                [email]="empleadoService.empleadoSeleccionado.email!==''" maxlength="20">
+              <!-- <div class="validation-error" *ngIf="email.errors?.required && email.touched">Campo requerido</div> -->
+              <!-- <div class="validation-error campo_requerido" *ngIf="email.errors?.email && email.touched">Correo inválido</div> -->
+            </div>
+          </div>
+          <!-- fin class row datps personales2 -->
+        </div>
+        <!-- /.box-body -->
+
+      </div>
+      <!-- /.box -->
+
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Ubicacion geografica</h3>
+          <div class="box-tools pull-right">
+            <!-- hawk inicia -->
+            <button type="button" class="btn btn-outline-primary" (click)="hide_sections(3)"
+              [attr.aria-expanded]="!collapsed_json.third" aria-controls="ubicacion_geografica">
+              <i class="fa fa-minus" *ngIf="!collapsed_json.third"></i>
+              <i class="fa fa-plus" *ngIf="collapsed_json.third"></i>
+            </button>
+            <!-- hawk finaliza -->
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" id="ubicacion_geografica" [ngbCollapse]="collapsed_json.third">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label class="tamanyo_letra_labelp" for="direccion">Dirección de residencia
+              </label>
+              <input class="form-control tamanyo_letra_inputp" name="direccion" #direccion="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.direccion" placeholder="" maxlength="100">
+              <!-- <div class="validation-error campo_requerido" *ngIf="direccion.invalid && direccion.touched">Campo requerido
+              </div> -->
+            </div>
+            <!-- fin row direccion -->
+            <div class="form-group col-md-2">
+              <label class="tamanyo_letra_labelp" for="paisId">Pais</label>
+              <select class="form-control tamanyo_letra_inputp" name="paisId" #paisId="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.paisId" (ngModelChange)="listarDepartamento($event)"
+                >
+                <option class="tamanyo_letra_inputp" *ngFor="let pais of paisService.paisList" [value]="pais.paisId">
+                  {{pais.paisNombre}}</option>
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="paisId.invalid && paisId.touched">Campo requerido</div> -->
+            </div>
+            <div class="form-group col-md-2">
+              <label class="tamanyo_letra_labelp" for="departamentoId">Departamento</label>
+              <select class="form-control tamanyo_letra_inputp" name="departamentoId" #departamentoId="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.departamentoId"
+                (ngModelChange)="listarMunicipio($event)" >
+                <option class="tamanyo_letra_inputp" *ngFor="let dep of departamentoService.departamentoList"
+                  [value]="dep.departamentoId">
+                  {{dep.departamentoNombre}}</option>
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="departamentoId.invalid && departamentoId.touched">Campo
+                requerido
+              </div> -->
+            </div>
+            <div class="form-group col-md-2">
+              <label class="tamanyo_letra_labelp" for="municipioId">Municipio</label>
+              <select class="form-control tamanyo_letra_inputp" name="municipioId" #municipioId="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.municipioId" id="estado1">
+                <option class="tamanyo_letra_inputp" *ngFor="let muni of municipioService.municipioList"
+                  [value]="muni.municipioId">
+                  {{muni.municipioNombre}}</option>
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="municipioId.invalid && municipioId.touched">Campo requerido
+              </div> -->
+            </div>
+            <!-- fin row estado -->
+          </div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Información laboral</h3>
+          <div class="box-tools pull-right">
+            <!-- hawk inicia -->
+            <button type="button" class="btn btn-outline-primary" (click)="hide_sections(4)"
+              [attr.aria-expanded]="!collapsed_json.four" aria-controls="datos_laborales">
+              <i class="fa fa-minus" *ngIf="!collapsed_json.four"></i>
+              <i class="fa fa-plus" *ngIf="collapsed_json.four"></i>
+            </button>
+            <!-- hawk finaliza -->
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" id="datos_laborales" [ngbCollapse]="collapsed_json.four">
+          <div class="row">
+
+            <div class="form-group col-md-6">
+              <label class="tamanyo_letra_labelp" for="paisId">Area</label>
+              <select class="form-control tamanyo_letra_inputp" name="areaId" #areaId="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.areaId" >
+                <option class="tamanyo_letra_inputp" *ngFor="let ar of areaService.areaList" [value]="ar.areaId">
+                  {{ar.nombre}}</option>
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="areaId.invalid && areaId.touched">Campo requerido</div> -->
+            </div> 
+
+            <div class="form-group col-md-6">
+              <label class="tamanyo_letra_labelp" for="cargoId">Cargo</label>
+              <select class="form-control tamanyo_letra_inputp" name="cargoId" #cargoId="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.cargoId">
+                <option class="tamanyo_letra_inputp" *ngFor="let car of cargoService.cargoList" [value]="car.id">
+                  {{car.cargoId}} {{car.nombre}}</option>
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="cargoId.invalid && cargoId.touched">Campo
+                requerido
+              </div> -->
+            </div>
+            <div class="form-group col-md-6">
+              <label class="tamanyo_letra_labelp" for="empleadoJefeId">Jefe</label>
+              <select class="form-control tamanyo_letra_inputp" name="empleadoJefeId" #empleadoJefeId="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.empleadoJefeId" >
+                <option class="tamanyo_letra_inputp" *ngFor="let jefe of empleadoService.jefeList"
+                  [value]="jefe.empleadoJefeId">
+                  {{jefe.nombre1}} {{jefe.nombre2}} {{jefe.apellido1}} {{jefe.apellido2}} / {{jefe.cargoNombre}}
+                  {{jefe.areaNombre}}</option>              
+              </select>
+              <!-- <div class="validation-error campo_requerido" *ngIf="empleadoJefeId.invalid && empleadoJefeId.touched">Campo requerido
+              </div> -->
+            </div>
+            <div class="form-group col-md-3">
+              <label class="tamanyo_letra_labelp" for="sueldo">Sueldo
+              </label>
+              <input type="number" class="form-control tamanyo_letra_inputp " name="sueldo" #sueldo="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.sueldo" placeholder=""  maxlength="50">
+              <!-- <div class="validation-error campo_requerido" *ngIf="sueldo.invalid && sueldo.touched">Campo requerido
+              </div> -->
+            </div>
+            <div class="form-group col-md-3">
+              <div class="form-group">
+                <label class="tamanyo_letra_labelp" for="esDocente">¿Es docente?</label>
+                <select class="form-control tamanyo_letra_inputp" name="esDocente" #esDocente="ngModel"
+                  [(ngModel)]="empleadoService.empleadoSeleccionado.esDocente" >
+                  <option *ngFor="let opc of empleadoService.esdocenteArr" [value]="opc.esDocente">
+                    {{opc.esDocenteOpc}}</option>
+                </select>
+                <!-- <div class="validation-error campo_requerido" *ngIf="esDocente.invalid && esDocente.touched">Campo requerido
+                </div> -->
+              </div>
+            </div>          
+        
+          </div>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-9">
+              </div>
+              <div class="col-md-1">
+                <button [disabled]="!empleadoForm.valid" type="submit" class="btn btn-block btn-success">
+                  <i class="fas fa-save"></i>
+                </button>
+              </div>
+              <div class="form-grou col-md-1">
+                <button type="button" class="btn btn-block btn-info" (click)="open(content)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="col-md-1">
+                <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(empleadoForm)">
+                  <i class="fas fa-recycle"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </form>
+  </div>
+</div>
+
+<!-- fin row del formulario de registro de alumnos -->
+<!-- inicio row modal de busqueda -->
+<div class="row">
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="tamanyo_letra_titulo">Lista de empleados</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="col-md-12" style="margin-left: -15px;" #empleadoFormBus="ngForm" (ngSubmit)='buscarEmpleado(empleadoFormBus)'>
+          <input type="hidden" name="id" #id="ngModel" 
+          [(ngModel)]="empleadoService.empleadoSeleccionado.id">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.opcionDML">
+          <input type="hidden" name="img" #img="ngModel" 
+          [(ngModel)]="empleadoService.empleadoSeleccionado.img">
+          <input type="hidden" name="opcionConsulta" #opcionConsulta="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.opcionConsulta">
+          <input type="hidden" name="estadoId" #estadoId="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.estadoId">
+          <input type="hidden" name="fechaIngreso" #fechaIngreso="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.fechaIngreso">
+          <input type="hidden" name="fechaModificacion" #fechaModificacion="ngModel"
+            [(ngModel)]="empleadoService.empleadoSeleccionado.fechaModificacion">
+
+          <div class="row">
+            <div class="form-group col-md-11 ">
+              <!-- <label class="tamanyo_letra_labelp" for="nombre1">Buscar por nombre
+              </label> -->
+              <input class="form-control tamanyo_letra_inputp" name="nombre1" #nombre1="ngModel"
+                [(ngModel)]="empleadoService.empleadoSeleccionado.nombre1" placeholder="Buscar por nombres o apellidos" required maxlength="20">
+              <div class="validation-error campo_requerido" *ngIf="nombre1.invalid && nombre1.touched">*
+              </div>
+            </div>
+         
+          <div class="form-group col-md-1">
+            <!-- <label class="tamanyo_letra_labelp" for="nombre1">
+            </label> -->
+            <button [disabled]="!empleadoFormBus.valid" type="submit" class="btn btn-block btn-info ">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+          </form>
+
+      <!-- <p>Resultados de la busqueda</p> -->
+      <!-- <div class="col-md-12 table-responsive-sm"> -->
+      <div class="row">
+        <div class="col-md-12 table-responsive-sm" *ngIf="empleadoService.empleadoList">
+          <table class="table table-sm table-hover">
+            <thead class="">
+              <tr>
+                <th class="tamanyo_letra_labelp" scope="col">Empleado</th>
+                <th class="tamanyo_letra_labelp" scope="col">Cargo</th>
+                <th class="tamanyo_letra_labelp" scope="col">Area</th>
+                <th class="tamanyo_letra_labelp" scope="col">Estado</th>
+                <th class="tamanyo_letra_labelp" scope="col">Acciones</th>
+                <!-- <th scope="col">Eliminar</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let emp of empleadoService.empleadoList">
+                <td class="pull-left tamanyo_letra_inputp">{{ emp.nombre1 }} {{ emp.nombre2 }} {{ emp.apellido1 }} {{ emp.apellido2 }}</td>
+                <td class="pull-left tamanyo_letra_inputp">{{ emp.cargoNombre }}</td>
+                <td class="pull-left tamanyo_letra_inputp">{{ emp.areaNombre }}</td>
+                <td class="pull-left tamanyo_letra_inputp">{{ emp.estadoNombre }}</td>
+                <td>
+                  <a class="btn text-info" (click)="d('Cross click')" (click)="showForEdit(emp) ">
+                    <i class="fas fa-edit"></i>
+                  </a>               
+                  <a class="btn text-danger">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- </div> -->
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>

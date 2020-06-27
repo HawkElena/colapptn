@@ -1,0 +1,58 @@
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { User } from '../models/user';
+import { UserService} from '../services/user.service';
+import { NgForm } from '@angular/forms';
+
+import { formDirectiveProvider } from '@angular/forms/src/directives/ng_form';
+
+@Component({
+    selector: 'app-sign-up',
+    templateUrl: '../views/sign-up.component.html',
+    providers: [UserService]
+})
+
+export class SignUpComponent implements OnInit{
+    public titulo: string;  
+    user: User;
+    emailPattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+           
+    constructor( 
+        private _router: Router,
+        public userServices: UserService        
+    ){ 
+        this.titulo = 'Registro de Usuarios'; 
+    }   
+  
+    ngOnInit(){       
+        
+        this.resetForm();
+    }
+
+    resetForm(form? : NgForm){
+        if(form != null)
+        this.user = {
+            colegioId       : 0,
+            usuarioId       : 0,
+            usuario         : '',
+            password        : '',
+            email           : '',
+            primerNombre    : '',
+            apellido        : '',
+            descripcionPath : '', 
+            routePath       : '',
+            estado          : 0,
+            opcionDML       : 0   
+        }
+    }
+
+    onSubmit(){
+        alert('Hola, autentiquese');
+    }
+
+    login(){
+        this._router.navigate(["/perfilAlumno"]);
+        // alert('kdsfjdfskjlñ');
+        // this.userServices.getUsuarioPathList();
+    }
+}

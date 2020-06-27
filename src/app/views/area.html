@@ -1,0 +1,80 @@
+<div class="col-md-12">
+    <h1>{{ titulo }}</h1>
+    <div class="row">        
+        <form class="config-form col-md-12" #areaForm="ngForm" (ngSubmit)='onSubmit(areaForm)'>
+            <!-- Parámetros de control del servicio -->
+            <input type="hidden" name="areaId" #areaId="ngModel" [(ngModel)]="areaService.areaSeleccionado.areaId">
+            <input type="hidden" name="colegioId" #colegioId="ngModel" [(ngModel)]="areaService.areaSeleccionado.colegioId">
+            <input type="hidden" name="opcionSelect" #opcionSelect="ngModel" [(ngModel)]="areaService.areaSeleccionado.opcionSelect">
+            <input type="hidden" name="opcionDML" #opcionDML="ngModel" [(ngModel)]="areaService.areaSeleccionado.opcionDML">
+            <div class="row">               
+                <div class="form-grou col-md-3" [class.has-error]="nombre.touched && nombre.invalid">
+                    <label for="nombre" class="control-label tamanyo_letra_labelp">Area                                                   
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="nombre" #nombre="ngModel" [(ngModel)]="areaService.areaSeleccionado.nombre"
+                        placeholder="" required>
+                    <div class="validation-error" *ngIf="nombre.invalid && nombre.touched">Campo requerido</div>    
+                </div>
+                <div class="form-grou col-md-6">
+                    <div class="form-group">
+                        <label for="estado" class="control-label tamanyo_letra_labelp">Estado</label>
+                        <select class="form-control tamanyo_letra_inputp" name="estado" #estado="ngModel" [(ngModel)]="areaService.areaSeleccionado.estado" id="estado" required>
+                            <!-- estos parametros estadoId y CodEstadoNombre vienen del modelo estado y no del model carrera -->
+                            <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">{{estado.CodEstadoNombre}}</option>
+                        </select>
+                        <div class="validation-error" *ngIf="estado.invalid && estado.touched">Campo requerido</div>    
+                    </div>                  
+                    <!--contiene un select con la lista de estados en un componente distinto-->
+                    <!-- <estado></estado> -->
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="form-grou col-md-6">
+                    <button [disabled]="!areaForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">
+                        <i class="fas fa-save"></i>
+                        Enviar datos
+                    </button>
+                </div>
+                <div class="form-grou col-md-3">
+                    <button type="button" class="btn btn-lg btn-block btn-info" (click)="listarArea()">Ver areas</button>
+                </div>
+                <div class="form-grou col-md-3">
+                    <button type="button" class="btn btn-lg btn-block btn-secundary" (click)="limpiarForm(areaForm)">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- inicio tabla -->
+    <div class="row" *ngIf="areaService.areaList">
+        <br>
+        <div class="col-md-6 table-responsive-sm">
+            <table class="table table-sm table-hover">
+                <thead class="">
+                    <tr>
+                        <th scope="col">Area</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let area of areaService.areaList">
+                        <td>{{ area.nombre }}</td>
+                        <td>{{ area.estado }}</td>
+                        <td>
+                            <a class="btn" (click)="showForEdit(area)">Editar
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn text-danger">Eliminar
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

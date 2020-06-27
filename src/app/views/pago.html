@@ -1,0 +1,420 @@
+<div class="col-md-12">
+  <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+</div>
+<!-- <div class="jumbotron bg-secondary text-white col-md-4"> -->
+<div class="col md 12">
+    <h3>{{titulo}}</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- seccion para el enterante -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="form-grou col-md-1" *ngIf="clienteService.clienteSeleccionado.clienteNombre">
+                                    <h5>Enterante: </h5>
+                                </div>
+                                <div class="form-grou col-md-4">
+                                    {{ clienteService.clienteSeleccionado.clienteNombre }}
+                                </div>
+                                <div class="form-grou col-md-1" *ngIf="clienteService.clienteSeleccionado.nit">
+                                    <h5>NIT: </h5>
+                                </div>
+                                <div class="form-grou col-md-2">
+                                    {{ clienteService.clienteSeleccionado.nit }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn text-info" (click)="open(contentCli)">Buscar Enterante</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- seccion para el alumno -->
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="form-grou col-md-1" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoNombre1">
+                                    <h5>Alumno: </h5>
+                                </div>
+                                <div class="form-grou col-md-4">
+                                    {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre1 }} {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre2 }}
+                                    {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre3 }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido1
+                                    }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido2 }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido3
+                                    }}
+                                </div>
+                                <div class="form-grou col-md-1" *ngIf="pagoService.montoSeleccionado.carreraNombre">
+                                    <h5>Registro: </h5>
+                                </div>
+                                <div class="form-grou col-md-4">
+                                    {{pagoService.montoSeleccionado.carreraNombre}} {{pagoService.montoSeleccionado.jornadaNombre}}
+                                </div>
+                                <div class="form-grou col-md-1" *ngIf="pagoService.montoSeleccionado.ciclo">
+                                    <h5>Ciclo: </h5>
+                                </div>
+                                <div class="form-grou col-md-1">
+                                    {{pagoService.montoSeleccionado.ciclo}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn text-info" (click)="open(content)">Buscar alumno</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!-- seccion para el formulario de pagos -->
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="col-md-12" #encargadoForm="ngForm" (ngSubmit)='onSubmit(encargadoForm)'>
+                        <input type="hidden" name="pagoId" #pagoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.pagoId">
+                        <input type="hidden" name="alumnoId" #alumnoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.alumnoId">
+                        <input type="hidden" name="clienteId" #clienteId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.clienteId">
+                        <input type="hidden" name="ciclo" #ciclo="ngModel" [(ngModel)]="pagoService.montoSeleccionado.ciclo">
+                        <input type="hidden" name="mesId" #mesId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.mesId">
+                        <input type="hidden" name="opcionDML" #opcionDML="ngModel" [(ngModel)]="pagoService.montoSeleccionado.opcionDML">
+                        <input type="hidden" name="colegioId" #colegioId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.colegioId">
+                        <input type="hidden" name="noFactura" #noFactura="ngModel" [(ngModel)]="pagoService.montoSeleccionado.noFactura">
+                        <input type="hidden" name="estadoId" #estadoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.estadoId">
+                        <div class="row">
+
+                            <div class="form-grou col-md-12" *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoNombre1">
+                                <div class="form-group">
+                                    <label for="tipoPagoId">Tipo de pago</label>
+                                    <select class="form-control" name="tipoPagoId" #tipoPagoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.tipoPagoId"
+                                        required (ngModelChange)="buscarMontoXAluId($event)">
+                                        <option *ngFor="let tip of tipoPagoService.tipoPagoList" [value]="tip.tipoPagoId">{{tip.tipoPagoNombre}}</option>
+                                    </select>
+                                    <div class="validation-error" *ngIf="tipoPagoId.invalid && tipoPagoId.touched">Campo requerido</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+
+                            <div class="form-grou col-md-2" *ngIf="pagoService.montoSeleccionado.mesId > 0">
+                                <div class="form-group">
+                                    <label for="mesNombre">Mes a pagar</label>
+                                    <input disabled class="form-control" name="mesNombre" #mesNombre="ngModel" [(ngModel)]="pagoService.montoSeleccionado.mesNombre">
+                                </div>
+                            </div>
+                            <div class="form-grou col-md-2">
+                                <div class="form-group">
+                                    <label for="monto">Tarifa (Q)</label>
+                                    <input disabled class="form-control" name="monto" #monto="ngModel" [(ngModel)]="pagoService.montoSeleccionado.monto">
+
+                                </div>
+                            </div>
+                            <div class="form-grou col-md-2">
+                                <div class="form-group">
+                                    <label for="descuento">Descuento (Q)</label>
+                                    <input class="form-control" name="descuento" #descuento="ngModel" [(ngModel)]="pagoService.montoSeleccionado.descuento" (ngModelChange)="calcularMontoConDescuento()">
+                                </div>
+                            </div>
+                            <div class="form-grou col-md-2">
+                                <div class="form-group">
+                                    <label for="montoConDescuento">Sub total (Q)</label>
+                                    <input disabled class="form-control" name="montoConDescuento" #montoConDescuento="ngModel" [(ngModel)]="pagoService.montoSeleccionado.montoConDescuento">
+                                </div>
+                            </div>
+                            <div class="form-grou col-md-2" *ngIf="pagoService.montoSeleccionado.mora > 0">
+                                <div class="form-group">
+                                    <label for="mora">Mora (Q)</label>
+                                    <input disabled class="form-control" name="mora" #mora="ngModel" [(ngModel)]="pagoService.montoSeleccionado.mora">
+                                </div>
+                            </div>
+                            <div class="form-grou col-md-2">
+                                <div class="form-group">
+                                    <label for="total">Total a pagar (Q)</label>
+                                    <input disabled class="form-control" name="total" #total="ngModel" [(ngModel)]="pagoService.montoSeleccionado.total">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                            <div class="form-grou col-md-4">
+                                <div class="form-group">
+                                    <label for="formaPagoId">Forma de pago</label>
+                                    <select class="form-control" name="formaPagoId" #formaPagoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.formaPagoId"
+                                        required>
+                                        <option *ngFor="let forma of formaPagoService.formaPagoList" [value]="forma.formaPagoId">{{forma.formaPagoNombre}}</option>
+                                    </select>
+                                    <div class="validation-error" *ngIf="formaPagoId.invalid && formaPagoId.touched">Campo requerido</div>
+                                </div>
+                            </div>
+                            <!-- pagos en bancos -->
+                            <!-- <div class="col-md-8" *ngIf="pagoService.montoSeleccionado.formaPagoId!=5 && pagoService.montoSeleccionado.formaPagoId!=null && pagoService.montoSeleccionado.formaPagoId>0"> -->
+                            <div class="col-md-8" *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId>0">
+                                <div class="row">
+                                    <div class="form-grou col-md-4">
+                                        <div class="form-group">
+                                            <label for="bancoId">Banco</label>
+                                            <select class="form-control" name="bancoId" #bancoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.bancoId" required>
+                                                <option *ngFor="let ban of bancoService.bancoList" [value]="ban.bancoId">{{ban.bancoNombre}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-grou col-md-4" *ngIf="pagoService.montoSeleccionado.formaPagoId == 4 && pagoService.montoSeleccionado.formaPagoId!=null && pagoService.montoSeleccionado.formaPagoId!=0"> -->
+                                    <div class="form-grou col-md-4" *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId > 0">
+                                        <div class="form-group">
+                                            <label for="noBoleta" *ngIf="pagoService.montoSeleccionado.formaPagoId==1">No. Boleta
+                                                de depósito</label>
+                                            <label for="noBoleta" *ngIf="pagoService.montoSeleccionado.formaPagoId==2">No. Cheque</label>
+                                            <label for="noBoleta" *ngIf="pagoService.montoSeleccionado.formaPagoId==3">No. Recibo</label>
+                                            <input class="form-control" name="noBoleta" #noBoleta="ngModel" [(ngModel)]="pagoService.montoSeleccionado.noBoleta">
+                                        </div>
+                                    </div>
+                                    <div class="form-grou col-md-4" *ngIf="pagoService.montoSeleccionado.formaPagoId==1">
+                                        <div class="form-group">
+                                            <label for="noBoleta">Fecha depósito</label>
+                                            <input type="date" class="form-control" name="fechaDeposito" #fechaDeposito="ngModel" [(ngModel)]="pagoService.montoSeleccionado.fechaDeposito">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- fin pagos en bancos -->
+                        </div>
+                        <!-- nota sobre la mora a pagar y la inscripcion pagada -->
+                        <hr *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                        <div class="row" *ngIf="pagoService.montoSeleccionado.mora > 0">
+                            <div class="form-grou col-md-6">
+                                <p>Se pagarán {{pagoService.montoSeleccionado.mora}} Q. de mora a partir del día {{pagoService.montoSeleccionado.diaLimite}}
+                                    </p>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="inscripcionPagada">
+                                <div class="form-grou col-md-6">
+                                    <p> {{inscripcionPagada}} </p>
+                                </div>
+                            </div>
+                        <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                            <div class="form-grou col-md-6">
+                                <button [disabled]="!encargadoForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">
+                                    <i class="fas fa-save"></i>
+                                    Enviar datos
+                                </button>
+                            </div>
+                            <div class="form-grou col-md-6">
+                                <button type="button" class="btn btn-lg btn-block btn-info" (click)="buscarPagosxAluId()">Ver pagos anteriores</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <br>
+                    <!-- aqui la tabla con el records de pagos -->
+                    <div class="row" *ngIf="pagoService.pagoList">
+                        <div class="col-md-12">
+                            <div class="col-md-12 table-responsive-sm">
+                                <table class="table table-sm ">
+                                    <thead class="">
+                                        <tr>
+                                            <th scope="col">Ciclo</th>
+                                            <th scope="col">tipo pago</th>
+                                            <th scope="col">Tarifa</th>
+                                            <th scope="col">Mes pagado</th>
+                                            <th scope="col">Forma pago</th>
+                                            <th scope="col">Total pagado</th>
+                                            <th scope="col">Editar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let pago of pagoService.pagoList">
+                                            <td>{{ pago.ciclo }} </td>
+                                            <td>{{ pago.tipoPagoNombre }} </td>
+                                            <td>{{ pago.monto }} </td>
+                                            <td>{{ pago.mesNombre }} </td>
+                                            <td>{{ pago.formaPagoNombre }} </td>
+                                            <td>{{ pago.total }} </td>
+                                            <td>
+                                                <a class="btn" (click)="showForEdit(pago)">Editar
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Fin div principal -->
+</div>
+
+    <!-- inicio row modal para buscar alumno -->
+    <div class="row">
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <!-- <h4 class="modal-title" id="modal-basic-title">Hi there!</h4> -->
+                <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarAlumno(busForm)'>
+                    <div class="row">
+                        <input type="hidden" name="alumnoId" #alumnoId="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+                        <input type="hidden" name="colegioId" #colegioId="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+                        <input type="hidden" name="opcionDML" #opcionDML="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+                        <div class="form-grou col-md-10">
+                            <input class="form-control" name="alumnoNombre1" #alumnoNombre1="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1"
+                                placeholder="Ingrese un nombre o apellido" required>
+                            <div class="validation-error" *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">Campo requerido</div>
+                        </div>
+                        <div class="form-grou col-md-2">
+                            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">Buscar alumno</button>
+                        </div>
+                    </div>
+                </form>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- <p>Resultados de la busqueda</p> -->
+                <div class="col-md-12 table-responsive-sm">
+                    <table class="table table-sm table-hover">
+                        <thead class="">
+                            <tr>
+                                <th scope="col">Apellidos</th>
+                                <th scope="col">Nombres</th>
+                                <th scope="col">Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let alu of registroAlumnoService.alumnoList  |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                                <td>{{ alu.alumnoApellido1 }} {{ alu.alumnoApellido2 }} {{ alu.alumnoApellido3 }}</td>
+                                <td>{{ alu.alumnoNombre1 }} {{ alu.alumnoNombre2 }} {{ alu.alumnoNombre3 }} </td>
+                                <td>
+                                    <a class="btn text-info" (click)="d('Cross click')" (click)="verPerfilAlumno(alu)">Seleccionar
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                    </ngb-pagination>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </ng-template>
+    </div>
+
+     <!-- inicio row modal para buscar enterante -->
+    <div class="row">
+        <ng-template #contentCli let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <!-- <h4 class="modal-title" id="modal-basic-title">Hi there!</h4> -->
+                <form class="col-md-10" #busForm="ngForm" (ngSubmit)='listarCliente(busForm)'>
+                    <div class="row">
+                        <input type="hidden" name="clienteId" #clienteId="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.clienteId">
+                        <input type="hidden" name="colegioId" #colegioId="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.colegioId">
+                        <input type="hidden" name="opcionDML" #opcionDML="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.opcionDML">
+                        <div class="form-grou col-md-8">
+                            <input class="form-control" name="clienteNombre" #clienteNombre="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.clienteNombre"
+                                placeholder="Ingrese un nombre o apellido" required>
+                            <div class="validation-error" *ngIf="clienteNombre.invalid && clienteNombre.touched">Campo requerido</div>
+                        </div>
+                        <div class="form-grou col-md-3">
+                            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info" (click)="cerrarFormAddCliente()">Buscar
+                                enterante</button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <a class="btn text-info" (click)="abrirFormAddCliente()">Registrar</a>
+                        </div>
+                    </div>
+                </form>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- <p>Resultados de la busqueda</p> -->
+                <div class="row">
+                    <div class="col-md-12 table-responsive-sm" *ngIf="clienteService.clienteList && clienteService.abrirFormularioAddCli == 0">
+                        <table class="table table-sm table-hover">
+                            <thead class="">
+                                <tr>
+                                    <th scope="col">Nombres y apellidos</th>
+                                    <th scope="col">Nit</th>
+                                    <th scope="col">Dirección</th>
+                                    <th scope="col">Seleccionar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cli of clienteService.clienteList">
+                                    <td>{{ cli.clienteNombre }} </td>
+                                    <td>{{ cli.nit }} </td>
+                                    <td>{{ cli.direccion }} </td>
+                                    <td>
+                                        <a class="btn text-info" (click)="d('Cross click')" (click)="seleccionarCliente(cli)">Seleccionar
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- formualrio para agregar cliente -->
+                <div class="row">
+                    <div class="col-md-12" *ngIf="clienteService.abrirFormularioAddCli == 1">
+                        <form class="col-md-12" #busForm="ngForm" (ngSubmit)='agregarCliente(busForm)'>
+                            <div class="col-md-12">
+
+                                <input type="hidden" name="clienteId" #clienteId="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.clienteId">
+                                <input type="hidden" name="colegioId" #colegioId="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.colegioId">
+                                <input type="hidden" name="opcionDML" #opcionDML="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.opcionDML">
+                                <input type="hidden" name="estadoId" #estadoId="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.estadoId">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="form-grou col-md-12">
+                                                <input class="form-control" name="clienteNombre" #clienteNombre="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.clienteNombre"
+                                                    placeholder="Nombres y apellidos" required>
+                                                <div class="validation-error" *ngIf="clienteNombre.invalid && clienteNombre.touched">Campo
+                                                    requerido
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="form-grou col-md-12">
+                                                <input class="form-control" name="nit" #nit="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.nit"
+                                                    placeholder="NIT">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="form-grou col-md-12">
+                                                <input class="form-control" name="direccion" #direccion="ngModel" [(ngModel)]="clienteService.clienteSeleccionado.direccion"
+                                                    placeholder="Dirección">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="form-grou col-md-10">
+                                        <button [disabled]="!busForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">Enviar
+                                            datos
+                                        </button>
+                                    </div>
+                                    <div class="form-grou col-md-2">
+                                        <a class="btn text-info" (click)="cerrarFormAddCliente()">Cerrar</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </ng-template>
+    </div>

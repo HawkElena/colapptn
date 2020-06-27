@@ -1,0 +1,147 @@
+<div class="box box-primary">
+    <div class="box-header with-border">
+        
+        <div class="row">
+            <div class="col-md-12">
+                <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="config-form col-md-12" #carJorForm="ngForm" (ngSubmit)='onSubmit(carJorForm)'>
+                    <h4 class="pull-left tamanyo_letra_titulo"> {{ titulo }} </h4>
+                    <input type="hidden" name="carJorId" #carJorId="ngModel"
+                        [(ngModel)]="carreraJornadaService.carJorSeleccionado.carJorId">
+                    <input type="hidden" name="colegioId" #colegioId="ngModel"
+                        [(ngModel)]="carreraJornadaService.carJorSeleccionado.colegioId">
+                    <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                        [(ngModel)]="carreraJornadaService.carJorSeleccionado.opcionDML">
+                    <input type="hidden" name="estado"  #estado ="ngModel"
+                        [(ngModel)]="carreraJornadaService.carJorSeleccionado.estado">
+                    <div class="row">
+                        <div class="form-grou col-md-8">
+                            <label class="tamanyo_letra_labelp" for="carreraId" >Carrera</label>
+                            <select class="form-control tamanyo_letra_inputp" name="carreraId" #carreraId="ngModel"
+                                [(ngModel)]="carreraJornadaService.carJorSeleccionado.carreraId" required>
+                                <option *ngFor="let carrera of carreraService.carreraList" [value]="carrera.carreraId">
+                                    {{carrera.carreraNombre}}</option>
+                            </select>
+                            <div class="validation-error text_campo_requerido" *ngIf="carreraId.invalid && carreraId.touched">Campo requerido
+                            </div>
+                        </div>
+                        <div class="form-grou col-md-4">
+                            <div class="form-group">
+                                <label class=" tamanyo_letra_labelp" for="jornadaId">Jornada</label>
+                                <select class="form-control tamanyo_letra_inputp" name="jornadaId" #jornadaId="ngModel"
+                                    [(ngModel)]="carreraJornadaService.carJorSeleccionado.jornadaId" required>
+                                    <option *ngFor="let jornada of tipoJornadaService.tipoJornadaList"
+                                        [value]="jornada.jornadaId">{{jornada.jornadaNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="jornadaId.invalid && jornadaId.touched">Campo
+                                    requerido</div>
+                            </div>
+                        </div>
+                        <!-- <div class="form-grou col-md-3">
+                            <div class="form-group">
+                                <label class=" tamanyo_letra_labelp" for="estado">Estado</label>
+                                <select class="form-control tamanyo_letra_inputp" name="estado" #estado="ngModel"
+                                    [(ngModel)]="carreraJornadaService.carJorSeleccionado.estado" id="estado" required>
+
+                                    <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">
+                                        {{estado.CodEstadoNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="estado.invalid && estado.touched">Campo requerido
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="form-grou col-md-9">
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button [disabled]="!carJorForm.valid" type="submit" class="btn btn-block btn-success ">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-info" (click)="open(content)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(carJorForm)">
+                                <i class="fa fa-recycle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- inicio row modal -->
+<div class="row">
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title pull-left tamanyo_letra_titulo" id="modal-basic-title">Lista de asociaciones</h4>
+            
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-grou col-md-12">
+                    <div class="form-group">
+                        <label for="nivelId" class="control-label tamanyo_letra_labelp">Filtrar por nivel</label>
+                        <select class="form-control tamanyo_letra_inputp" name="nivelId" #nivelId="ngModel"
+                            [(ngModel)]="carreraJornadaService.carJorSeleccionado.nivelId"
+                            (ngModelChange)="listarCarreraJornada($event)">
+                            <option *ngFor="let nivel of nivelService.nivelList" [value]="nivel.nivelId">
+                                {{nivel.nivelNombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="col-md-12 table-responsive-sm" *ngIf="carreraJornadaService.carJorList">
+                    <table class="table table-sm table-hover">
+                        <thead class="">
+                            <tr>
+                                <th class="tamanyo_letra_labelp " scope="col">Carrera</th>
+                                <th class="tamanyo_letra_labelp " scope="col">Jornada</th>                               
+                                <th class="tamanyo_letra_labelp " scope="col">Acciones</th>
+                                <!-- <th scope="col">Eliminar</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let cj of carreraJornadaService.carJorList">
+                                <td class="pull-left tamanyo_letra_inputp">{{ cj.carreraNombre }}</td>
+                                <td class="pull-left tamanyo_letra_inputp">{{ cj.jornadaNombre }}</td>                               
+                                <td>
+                                    <a class="btn text-info tamanyo_letra_labelp"
+                                        style="margin-top: -7px;padding-left: 0px;" (click)="d('Cross click')"
+                                        (click)="showForEdit(cj)">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a class="btn" *ngIf="cj.estado =='0'" [style.color]="'#808080'"                                       
+                                        (click)="bloqearDesbloquear(cj)">
+                                        <i class="fa fa-ban"></i>
+                                    </a>
+                                    <a class="btn" *ngIf="cj.estado =='1'" [style.color]="'#23B030'"                                        
+                                        (click)="bloqearDesbloquear(cj)">
+                                        <i class="fa fa-check-circle"></i>
+                                    </a>   
+                                </td>
+                               
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </ng-template>
+</div>

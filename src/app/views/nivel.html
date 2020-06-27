@@ -1,0 +1,110 @@
+<div class="box box-primary">
+    <div class="box-header with-border">        
+        <div class="row">
+            <div class="col-md-12">
+                <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="config-form col-md-12" #nivelForm="ngForm" (ngSubmit)='onSubmit(nivelForm)'>
+                    <h4 class="pull-left tamanyo_letra_titulo"> {{ titulo }} </h4>
+                    <!-- Parámetros de control del servicio -->
+                        <input type="hidden" name="nivelId" #nivelId="ngModel" [(ngModel)]="nivelService.nivelSeleccionado.nivelId">
+                        <input type="hidden" name="colegioId" #colegioId="ngModel" [(ngModel)]="nivelService.nivelSeleccionado.colegioId">
+                        <input type="hidden" name="opcionSelect" #opcionSelect="ngModel" [(ngModel)]="nivelService.nivelSeleccionado.opcionSelect">
+                        <input type="hidden" name="opcionDML" #opcionDML="ngModel" [(ngModel)]="nivelService.nivelSeleccionado.opcionDML">
+                    <div class="row">
+                        <div class="form-grou col-md-6">
+                            <label class=" tamanyo_letra_labelp" for="estado">Nivel</label>
+                            <input class="form-control tamanyo_letra_inputp" name="nivelNombre" #nivelNombre="ngModel" [(ngModel)]="nivelService.nivelSeleccionado.nivelNombre" placeholder="Nombre nivel" required>
+                            <div class="validation-error" *ngIf="nivelNombre.invalid && nivelNombre.touched">Campo es requerido</div>
+                        </div>
+                        <div class="form-grou col-md-6">
+                            <div class="form-group">
+                                <label class=" tamanyo_letra_labelp" for="estado">Estado</label>
+                                <select class="form-control tamanyo_letra_inputp" name="estado" #estado="ngModel" [(ngModel)]="nivelService.nivelSeleccionado.estado" id="estado" required>
+                                    <!-- estos parametros estadoId y CodEstadoNombre vienen del modelo estado y no del model ciclo -->
+                                    <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">{{estado.CodEstadoNombre}}</option>
+                                </select>
+                                <div class="validation-error text_campo_requerido" *ngIf="estado.invalid && estado.touched">Campo requerido</div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="form-grou col-md-9">
+                        </div>
+                        <div class="form-grou col-md-1">
+                           <button [disabled]="!nivelForm.valid" type="submit" class="btn btn-block btn-success">
+                            <i class="fa fa-save"></i>   
+                            <!-- Enviar datos -->
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-info" (click)="listarNivel()" (click)="open(content)">
+                                <i class="fas fa-eye"></i>
+                                <!-- Ver niveles -->
+                            </button>
+                        </div>
+                        <div class="form-grou col-md-1">
+                            <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(nivelForm)">
+                                <i class="fa fa-recycle"></i>
+                                <!-- Reset -->
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- inicio row modal -->
+<div class="row">
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title pull-left tamanyo_letra_titulo" id="modal-basic-title">Lista de niveles educativos</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">           
+            <div class="row">
+                <div class="col-md-12 table-responsive-sm" *ngIf="nivelService.nivelList">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <!-- <th scope="col">#</th> -->
+                                <th class="tamanyo_letra_labelp" scope="col">Nivel</th>
+                                <!-- <th class="tamanyo_letra_labelp" scope="col">Status</th> -->
+                                <th class="tamanyo_letra_labelp" scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let nivel of nivelService.nivelList">                           
+                            <td class="pull-left tamanyo_letra_inputp">{{ nivel.nivelNombre }}</td>                            
+                            <td>
+                                <a class="btn text-info"
+                                style="margin-top: -7px;padding-left: 0px;" (click)="d('Cross click')"
+                                (click)="showForEdit(nivel)">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a class="btn" *ngIf="nivel.estado =='0'" [style.color]="'#808080'"                                       
+                                        (click)="bloqearDesbloquear(nivel)">
+                                        <i class="fa fa-ban"></i>
+                                    </a>
+                                    <a class="btn" *ngIf="nivel.estado =='1'" [style.color]="'#23B030'"                                        
+                                        (click)="bloqearDesbloquear(nivel)">
+                                        <i class="fa fa-check-circle"></i>
+                                    </a>   
+                            </td>
+                            
+                        </tr>
+                    </table>
+                </div>
+            </div>         
+        </div>
+        <div class="modal-footer">            
+        </div>
+    </ng-template>
+</div>

@@ -1,0 +1,829 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+
+  <div class="col-md-12">
+
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Registro de Pagos</a>
+        <ng-template ngbNavContent>
+          <form>
+            <div class="row">
+
+              <div class="col-md-4">
+                <buscar-alumno [arreglo_a_recibir]="parentData" (output_data_enviar)=recibe_datos_alum($event)>
+                </buscar-alumno>
+
+              </div>
+              <div class="col-md-8 ">
+                <br>
+                <div class="box box-primary posicion-tope">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">{{ titulo }} {{ciclos.anio}}</h3>
+                    <!-- <div class="box-tools pull-right"> -->
+                    <!-- hawk inicia -->
+                    <!-- <button type="button" class="btn btn-outline-primary" (click)="hide_sections(1)"
+                        [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_pagos">
+                        <i class="fa fa-minus" *ngIf="!collapsed_json.first"></i>
+                        <i class="fa fa-plus" *ngIf="collapsed_json.first"></i>
+                      </button> -->
+                    <!-- hawk finaliza -->
+                    <!-- </div> -->
+                    <!-- /.box-tools -->
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body" id="apartado_pagos" >
+                    <!-- <ngb-tabset> -->
+                    <!-- para agregar la pestaña de Tipo de pagos -->
+                    <!-- <ngb-tab title="Tipo de pagos"> -->
+
+                      <!-- seccion para el formulario de pagos -->
+                      <div class="row" style="border-style: solid;
+                          border-color: #1B55F3;
+                          background-color: #F9FAFD;
+                          margin-left: 5px;
+                          margin-right: 5px;
+                          margin-top: 5px;
+                          border-width: thin;"
+                          >
+                        <form class="col-md-12" #encargadoForm="ngForm" (ngSubmit)='onSubmit(encargadoForm)'>
+                          <input type="hidden" name="pagoId" #pagoId="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.pagoId">
+                          <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.alumnoId">
+                          <input type="hidden" name="clienteId" #clienteId="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.clienteId">
+                          <input type="hidden" name="ciclo" #ciclo="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.ciclo">
+                          <input type="hidden" name="mesId" #mesId="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.mesId">
+                          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.opcionDML">
+                          <input type="hidden" name="colegioId" #colegioId="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.colegioId">
+                          <input type="hidden" name="noFactura" #noFactura="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.noFactura">
+                          <input type="hidden" name="estadoId" #estadoId="ngModel"
+                            [(ngModel)]="pagoService.montoSeleccionado.estadoId">
+
+                          <div class="row">
+
+                            <div class="form-group col-md-3"
+                              *ngIf="registroAlumnoService.alumnoSeleccionado.alumnoNombre1">
+                              <div class="form-group">
+                                <label class="tamanyo_letra_labelp" for="tipoPagoId">Tipo de pago</label>
+                                <select class="form-control tamanyo_letra_inputp" name="tipoPagoId"
+                                  #tipoPagoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.tipoPagoId" required
+                                  (ngModelChange)="buscarMontoXAluId($event)">
+                                  <option *ngFor="let tip of tipoPagoService.tipoPagoList" [value]="tip.tipoPagoId">
+                                    {{tip.tipoPagoNombre}}</option>
+                                </select>
+                                <div class="validation-error" *ngIf="tipoPagoId.invalid && tipoPagoId.touched">Campo
+                                  requerido</div>
+                              </div>
+                            </div>
+                            <!-- (click)="buscarPagosxAluId()" -->
+                            <div class="form-group col-md-6" [ngStyle]="{'margin-top':'25px'}"
+                              *ngIf="!pagoService.montoSeleccionado.tipoPagoId && registroAlumnoService.alumnoSeleccionado.alumnoNombre1">
+                              <button type="button" class="btn btn-lg btn-block btn-info fa fa-eye"
+                                (click)="open(contentHistorial);buscarPagosxAluId();">
+                                Historial de pagos</button>
+                            </div>
+                          </div>
+
+                          <!-- tabla de tipo_pago -->
+                          <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                            <!-- inicio tabla de pago -->
+                            <div class="col-md-12" [ngStyle]="{'padding-left':'0px','margin-top': '-15px'}">
+                              <div class="col-md-12 table-responsive-sm">
+                                <table class="table table-sm table-hover" style="border:#1B55F3">
+                                  <thead class="tamanyo_letra_labelp">
+                                    <tr>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          Tipo pago
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          Mes a pagar
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          Tarifa
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          Descuento
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          SubTotal
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          Mora
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columna" scope="col">
+                                        <div>
+                                          Total
+                                        </div>
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="tamanyo_letra_inputp">
+                                    <tr>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                                          <input disabled class="ancho-columna tamanyo_letra_inputp"
+                                            [ngStyle]="{'width': '75px'}" name="tipoPagoNombre"
+                                            #tipoPagoNombre="ngModel"
+                                            [(ngModel)]="pagoService.montoSeleccionado.tipoPagoNombre">
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                                          <input disabled class="ancho-columna tamanyo_letra_inputp"
+                                            [ngStyle]="{'width': '75px'}" name="mesNombre" #mesNombre="ngModel"
+                                            [(ngModel)]="pagoService.montoSeleccionado.mesNombre">
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                                          <input disabled class=" ancho-columna tamanyo_letra_inputp" name="monto"
+                                            #monto="ngModel" [(ngModel)]="pagoService.montoSeleccionado.monto">
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                                          <input type="number" class="ancho-columna tamanyo_letra_inputp"
+                                            name="descuento" #descuento="ngModel"
+                                            [(ngModel)]="pagoService.montoSeleccionado.descuento"
+                                            (ngModelChange)="calcularMontoConDescuento()">
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+
+                                          <input disabled class="ancho-columna tamanyo_letra_inputp "
+                                            name="montoConDescuento" #montoConDescuento="ngModel"
+                                            [(ngModel)]="pagoService.montoSeleccionado.montoConDescuento">
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.mora > 0">
+                                          <input disabled class="ancho-columna tamanyo_letra_inputp" name="mora"
+                                            #mora="ngModel" [(ngModel)]="pagoService.montoSeleccionado.mora">
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+
+                                          <input disabled class="ancho-columna tamanyo_letra_inputp" name="total"
+                                            #total="ngModel" [(ngModel)]="pagoService.montoSeleccionado.total">
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <!-- fin tabla de pago -->
+
+                            <!-- inicio hawk_ocultarseccion -->
+                            <div *ngIf="false">
+                              <div class="form-group col-md-3" *ngIf="pagoService.montoSeleccionado.mesId > 0">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="mesNombre">Mes a pagar</label>
+                                  <input disabled class="form-control tamanyo_letra_inputp" name="mesNombre"
+                                    #mesNombre="ngModel" [(ngModel)]="pagoService.montoSeleccionado.mesNombre">
+                                </div>
+                              </div>
+
+                              <div class="form-group col-md-3" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="monto">Tarifa (Q)</label>
+                                  <input disabled class="form-control tamanyo_letra_inputp" name="monto"
+                                    #monto="ngModel" [(ngModel)]="pagoService.montoSeleccionado.monto">
+
+                                </div>
+                              </div>
+
+                              <div class="form-group col-md-3" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="descuento">Descuento (Q)</label>
+                                  <input type="number" class="form-control tamanyo_letra_inputp" name="descuento"
+                                    #descuento="ngModel" [(ngModel)]="pagoService.montoSeleccionado.descuento"
+                                    (ngModelChange)="calcularMontoConDescuento()">
+                                </div>
+                              </div>
+
+                              <!-- <div class="form-group col-md-2" *ngIf="pagoService.montoSeleccionado.mesId > 0">
+                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                  <label for="mesNombre">Mes a pagar</label>
+                                                                                                                                                                  <input disabled class="form-control" name="mesNombre" #mesNombre="ngModel"
+                                                                                                                                                                    [(ngModel)]="pagoService.montoSeleccionado.mesNombre">
+                                                                                                                                                                </div>
+                                                                                                                                                              </div> -->
+
+                              <!-- <div class="form-group col-md-3">
+                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                  <label class="tamanyo_letra_labelp" for="monto">Tarifa (Q)</label>
+                                                                                                                                                                  <input disabled class="form-control tamanyo_letra_inputp" name="monto"
+                                                                                                                                                                    #monto="ngModel" [(ngModel)]="pagoService.montoSeleccionado.monto">
+
+                                                                                                                                                                </div>
+                                                                                                                                                              </div> -->
+
+                              <!-- <div class="form-group col-md-3">
+                                                                                                                                                                <div class="form-group">
+                                                                                                                                                                  <label class="tamanyo_letra_labelp" for="descuento">Descuento (Q)</label>
+                                                                                                                                                                  <input type="number" class="form-control tamanyo_letra_inputp" name="descuento"
+                                                                                                                                                                    #descuento="ngModel" [(ngModel)]="pagoService.montoSeleccionado.descuento"
+                                                                                                                                                                    (ngModelChange)="calcularMontoConDescuento()">
+                                                                                                                                                                </div>
+                                                                                                                                                              </div> -->
+
+                              <div class="form-group col-md-3">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="montoConDescuento">Sub total (Q)</label>
+                                  <input disabled class="form-control tamanyo_letra_inputp" name="montoConDescuento"
+                                    #montoConDescuento="ngModel"
+                                    [(ngModel)]="pagoService.montoSeleccionado.montoConDescuento">
+                                </div>
+                              </div>
+
+                              <div class="form-group col-md-3" *ngIf="pagoService.montoSeleccionado.mora > 0">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="mora">Mora (Q)</label>
+                                  <input disabled class="form-control tamanyo_letra_inputp" name="mora"
+                                    #mora="ngModel" [(ngModel)]="pagoService.montoSeleccionado.mora">
+                                </div>
+                              </div>
+
+                              <div class="form-group col-md-3">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="total">Total a pagar (Q)</label>
+                                  <input disabled class="form-control tamanyo_letra_inputp" name="total"
+                                    #total="ngModel" [(ngModel)]="pagoService.montoSeleccionado.total">
+                                </div>
+                              </div>
+
+                            </div>
+                            <!-- fin de hawk_ocultarseccion -->
+
+                          </div>
+                          <!-- fin de tabla tipo_pago -->
+
+                          <!-- tabla de forma_pago -->
+                          <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId" [ngStyle]="{'margin-top':'10px' }">
+                          <div class="col-md-12" *ngIf="pagoService.montoSeleccionado.tipoPagoId"  [ngStyle]="{'padding-left':'0px' }">
+                            <div class="col-md-12 table-responsive-sm">
+                              <table class="table table-sm table-hover" style="border:#1B55F3">
+                                <thead class="tamanyo_letra_labelp">
+                                  <tr>
+                                    <th class="ancho-columnas" scope="col">
+                                      <div>
+                                        Forma de pago
+                                      </div>
+                                    </th>
+                                    <th class="ancho-columnas" scope="col">
+                                      <div *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId>0">
+                                        Banco
+                                      </div>
+                                    </th>
+                                    <th class="ancho-columnas" scope="col">
+                                      <div >
+                                        <label style="margin-bottom: 0px;" class="tamanyo_letra_labelp " for="noBoleta"
+                                          *ngIf="pagoService.montoSeleccionado.formaPagoId==1">No.
+                                          Boleta</label>
+                                        <label style="margin-bottom: 0px;" class="tamanyo_letra_labelp " for="noBoleta"
+                                          *ngIf="pagoService.montoSeleccionado.formaPagoId==2">No.
+                                          Cheque</label>
+                                        <label style="margin-bottom: 0px;" class="tamanyo_letra_labelp " for="noBoleta"
+                                          *ngIf="pagoService.montoSeleccionado.formaPagoId==3">No.
+                                          Recibo</label>
+                                        <label style="margin-bottom: 0px;" class="tamanyo_letra_labelp " for="noBoleta"
+                                          *ngIf="pagoService.montoSeleccionado.formaPagoId==4">No.
+                                          Transferencia</label>
+                                        <label style="margin-bottom: 0px;" class="tamanyo_letra_labelp " for="noBoleta"
+                                          *ngIf="pagoService.montoSeleccionado.formaPagoId==5">No.
+                                          Boleta</label>
+                                      </div>
+                                    </th>
+                                    <th class="ancho-columnas" scope="col">
+                                      <div *ngIf="pagoService.montoSeleccionado.formaPagoId==1">
+                                        Fecha depósito
+                                      </div>
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody class="tamanyo_letra_inputp">
+                                  <tr>
+                                    <td >
+                                      <div *ngIf="pagoService.montoSeleccionado.tipoPagoId" >
+                                        <select class=" tamanyo_letra_inputp " name="formaPagoId"
+                                          [ngStyle]="{'width': '182px'}"
+                                          #formaPagoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.formaPagoId"
+                                          required>
+                                          <option *ngFor="let forma of formaPagoService.formaPagoList"
+                                            [value]="forma.formaPagoId">{{forma.formaPagoNombre}}</option>
+                                        </select>
+
+                                      </div>
+
+                                    </td>
+                                    <td >
+                                      <div
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId>0"
+                                        >
+                                        <select class=" tamanyo_letra_inputp" name="bancoId"
+                                        [ngStyle]="{'width': '165px'}"
+                                        #bancoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.bancoId"
+                                          required>
+                                          <option *ngFor="let ban of bancoService.bancoList" [value]="ban.bancoId">
+                                            {{ban.bancoNombre}}</option>
+                                        </select>
+                                      </div>
+                                    </td>
+                                    <td >
+                                      <div
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId > 0"
+                                        >
+                                        <input class=" tamanyo_letra_inputp" name="noBoleta"
+                                        [ngStyle]="{'width':'70px'}"
+                                          #noBoleta="ngModel" [(ngModel)]="pagoService.montoSeleccionado.noBoleta">
+                                      </div>
+                                    </td>
+                                    <td >
+                                      <div *ngIf="pagoService.montoSeleccionado.formaPagoId==1">
+
+                                        <input type="date" class=" tamanyo_letra_inputp"
+                                          name="fechaDeposito" #fechaDeposito="ngModel"
+                                        [ngStyle]="{'width':'125px'}"
+                                          [(ngModel)]="pagoService.montoSeleccionado.fechaDeposito">
+
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          </div>
+                          <!-- fin de tabla de forma_pago -->
+
+                          <!-- inicio datos del enterante *ngIf="pagoService.montoSeleccionado.tipoPagoId" -->
+                          <div class="row" *ngIf="false" [ngStyle]="{'margin-top':'10px' }">
+                            <div class="col-md-12" *ngIf="pagoService.montoSeleccionado.tipoPagoId"  [ngStyle]="{'padding-left':'0px' }">
+                              <div class="col-md-12 table-responsive-sm">
+                                <table class="table table-sm table-hover" style="border:#1B55F3">
+                                  <thead class="tamanyo_letra_labelp">
+                                    <tr>
+                                      <th class="ancho-columnas" scope="col">
+                                        <div>
+                                          nit
+                                        </div>
+                                      </th>
+                                      <th class="ancho-columnas" scope="col">
+                                        <div>
+                                          Nombre
+                                        </div>
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <div class="col-md-3"
+                                          style="width: 185px;                                                                              margin-left: -4px;">
+                                          <div class="input-group mb-3">
+                                            <input type="text" class="form-control tamanyo_letra_inputp" name="ClienteNit" #Nit="ngModel"
+                                              [(ngModel)]="clienteService.clienteSeleccionado.nit" placeholder="Nit" (ngModelChange)="buscar_nit()">
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div class="col-md-9" style="    width: 324px;
+                                                                            margin-left: -17px;">
+
+                                          <div class="input-group mb-3">
+
+                                            <input type="text" class="form-control tamanyo_letra_inputp" name="clienteNombre" #Nit="ngModel"
+                                              [(ngModel)]="clienteService.clienteSeleccionado.clienteNombre" placeholder="Nombre del enterante">
+                                            <div class="input-group-append">
+                                              <button class="btn btn-primary fa fa-search" (click)="open(contentCli)">
+                                                Buscar por nombre
+                                              </button>
+                                            </div>
+                                          </div>
+
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- fin de datos del enterante -->
+
+                          <!-- row del enterante -->
+                          <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                            <div class="form-group col-md-3">
+                              <label class="tamanyo_letra_labelp" for="estado">Nit</label>
+                              <input type="text" class="form-control tamanyo_letra_inputp" name="ClienteNit" #Nit="ngModel"
+                              [(ngModel)]="clienteService.clienteSeleccionado.nit" placeholder="Nit" (ngModelChange)="buscar_nit()">
+
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="tamanyo_letra_labelp" for="estado">Enterante</label>
+                                <input type="text" class="form-control tamanyo_letra_inputp" name="clienteNombre" #Nit="ngModel"
+                                [(ngModel)]="clienteService.clienteSeleccionado.clienteNombre" placeholder="Nombre del enterante">
+                            </div>
+
+                            <div class="form-group col-md-5" style="margin-top: 28px;">
+                                <button class="btn btn-primary fa fa-search" type="button" (click)="open(contentCli)">
+                                  Buscar enterante
+                                </button>
+
+                            </div>
+                          </div>
+                          <!-- fin del row del enterante -->
+
+                          <div *ngIf="false">
+                            <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                              <div class="form-group col-md-4">
+                                <div class="form-group">
+                                  <label class="tamanyo_letra_labelp" for="formaPagoId">Forma de pago</label>
+                                  <select class="form-control tamanyo_letra_inputp " name="formaPagoId"
+                                    #formaPagoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.formaPagoId"
+                                    required>
+                                    <option *ngFor="let forma of formaPagoService.formaPagoList"
+                                      [value]="forma.formaPagoId">{{forma.formaPagoNombre}}</option>
+                                  </select>
+                                  <div class="validation-error" *ngIf="formaPagoId.invalid && formaPagoId.touched">
+                                    Campo requerido</div>
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="row">
+                              <!-- pagos en bancos -->
+                              <!-- <div class="col-md-8" *ngIf="pagoService.montoSeleccionado.formaPagoId!=5 && pagoService.montoSeleccionado.formaPagoId!=null && pagoService.montoSeleccionado.formaPagoId>0"> -->
+                              <div class="col-md-12"
+                                *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId>0">
+                                <div class="row">
+                                  <div class="form-group col-md-4">
+                                    <div class="form-group">
+                                      <label class="tamanyo_letra_labelp" for="bancoId">Banco</label>
+                                      <select class="form-control tamanyo_letra_labelp" name="bancoId"
+                                        #bancoId="ngModel" [(ngModel)]="pagoService.montoSeleccionado.bancoId" required>
+                                        <option *ngFor="let ban of bancoService.bancoList" [value]="ban.bancoId">
+                                          {{ban.bancoNombre}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="form-grou col-md-4" *ngIf="pagoService.montoSeleccionado.formaPagoId == 4 && pagoService.montoSeleccionado.formaPagoId!=null && pagoService.montoSeleccionado.formaPagoId!=0"> -->
+                                  <div class="form-group col-md-4"
+                                    *ngIf="pagoService.montoSeleccionado.formaPagoId && pagoService.montoSeleccionado.formaPagoId > 0">
+                                    <div class="form-group">
+                                      <label class="tamanyo_letra_labelp " for="noBoleta"
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId==1">No.
+                                        Boleta</label>
+                                      <label class="tamanyo_letra_labelp " for="noBoleta"
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId==2">No.
+                                        Cheque</label>
+                                      <label class="tamanyo_letra_labelp " for="noBoleta"
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId==3">No.
+                                        Recibo</label>
+                                      <label class="tamanyo_letra_labelp " for="noBoleta"
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId==4">No.
+                                        Transferencia</label>
+                                      <label class="tamanyo_letra_labelp " for="noBoleta"
+                                        *ngIf="pagoService.montoSeleccionado.formaPagoId==5">No.
+                                        Boleta</label>
+                                      <input class="form-control tamanyo_letra_inputp" name="noBoleta"
+                                        #noBoleta="ngModel" [(ngModel)]="pagoService.montoSeleccionado.noBoleta">
+                                    </div>
+                                  </div>
+                                  <div class="form-group col-md-4" *ngIf="pagoService.montoSeleccionado.formaPagoId==1">
+                                    <div class="form-group">
+                                      <label class="tamanyo_letra_labelp" for="noBoleta">Fecha depósito</label>
+                                      <input type="date" class="form-control tamanyo_letra_inputp" name="fechaDeposito"
+                                        #fechaDeposito="ngModel"
+                                        [(ngModel)]="pagoService.montoSeleccionado.fechaDeposito">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div><!-- fin pagos en bancos -->
+                            </div>
+                          </div>
+
+                          <!-- nota sobre la mora a pagar y la inscripcion pagada -->
+                          <hr *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                          <div class="row" *ngIf="pagoService.montoSeleccionado.mora > 0" style="margin-top: -25px;">
+                            <div class="form-group col-md-12">
+                              <div class="alert alert-danger alert-dismissible">
+                                <!-- <a [routerLink]="" class="close" data-dismiss="alert" aria-label="close">&times;</a> -->
+                                <p>Se pagarán <strong>Q. {{pagoService.montoSeleccionado.mora}}.00 </strong>
+                                  de mora a partir del día <strong>{{pagoService.montoSeleccionado.diaLimite}}</strong>
+                                  de cada mes.
+                                </p>
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                          <div class="row" *ngIf="inscripcionPagada">
+                            <!-- <div class="form-grou col-md-6">
+                                  <p> {{inscripcionPagada}} </p>
+                                </div> -->
+                            <div class="alert alert-danger alert-dismissible">
+                              <button type="button" class="close" (click)="cerrar_alert()">&times;</button>
+                              <!-- <a [routerLink]="" class="close" data-dismiss="alert" aria-label="close">&times;</a> -->
+                              <strong>
+                                <p> {{inscripcionPagada}} </p>
+                              </strong>
+                            </div>
+                          </div>
+
+                          <!-- botones de pagar e historial -->
+                          <div class="row" *ngIf="pagoService.montoSeleccionado.tipoPagoId" style="margin-top: -15px;">
+                            <div class="form-group col-md-6">
+                              <button [disabled]="!encargadoForm.valid" type="submit"
+                                class="btn btn-lg btn-block btn-success fas fa-money-check-alt ">
+                                <!-- <i class="fas fa-save"></i> -->
+                                Pagar
+                              </button>
+                            </div>
+                            <!-- (click)="buscarPagosxAluId()" -->
+                            <div class="form-group col-md-6">
+                              <button type="button" class="btn btn-lg btn-block btn-info fa fa-eye"
+                                (click)="open(contentHistorial);buscarPagosxAluId() ">
+                                Historial de pagos</button>
+                            </div>
+                          </div>
+                          <!-- fin de botones e historial -->
+
+                          <!-- <div *ngIf="pagoService.montoSeleccionado.tipoPagoId">
+                            <br>
+                          </div> -->
+
+                        </form>
+
+                      </div>
+                      <!-- termina seccion para el formulario de pagos -->
+
+                      <!-- </ng-template> -->
+                    <!-- </ngb-tab>
+                    </ngb-tabset> -->
+
+                  </div>
+                  <!-- /.box-body -->
+
+                </div>
+                <!-- /.box -->
+
+              </div>
+            </div>
+
+          </form>
+
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  </div>
+</div>
+<!-- inicio row modal para buscar enterante -->
+<div class="row">
+  <ng-template #contentCli let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <!-- <h4 class="modal-title" id="modal-basic-title">Hi there!</h4> -->
+      <div class="row">
+        <div class="col-md-12" style="margin-left: 50%;">
+          <h2 class="modal-title" style=" text-align: center; color: #576778;" id="modal-basic-title">Buscar Enterante</h2>
+        </div>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="background-color: #F9FAFD">
+      <!-- <p>Resultados de la busqueda</p> -->
+      <form class="col-md-10" #busForm="ngForm" (ngSubmit)='listarCliente(busForm)'>
+        <div class="row">
+          <input type="hidden" name="clienteId" #clienteId="ngModel"
+            [(ngModel)]="clienteService.clienteSeleccionado.clienteId">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="clienteService.clienteSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="clienteService.clienteSeleccionado.opcionDML">
+          <div class="form-group col-md-8">
+            <input class="form-control tamanyo_letra_inputp" name="clienteNombre" #clienteNombre="ngModel"
+              [(ngModel)]="clienteService.clienteSeleccionado.clienteNombre" placeholder="Ingrese un nombre o apellido"
+              required>
+            <div class="validation-error tamanyo_letra_labelp" *ngIf="clienteNombre.invalid && clienteNombre.touched">Campo requerido</div>
+          </div>
+          <div class="form-group col-md-3">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info"
+
+              (click)="cerrarFormAddCliente()">
+              <i class="fa fa-search"></i>Buscar enterante</button>
+          </div>
+          <div class="form-group col-md-1">
+            <a class="btn text-info " (click)="abrirFormAddCliente()">Registrar</a>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-md-12 table-responsive-sm"
+          *ngIf="clienteService.clienteList && clienteService.abrirFormularioAddCli == 0">
+          <table class="table table-sm anotherhover table-striped">
+            <thead class="tamanyo_letra_labelp">
+              <tr>
+                <th scope="col">Nombres y apellidos</th>
+                <th scope="col">Nit</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Seleccionar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cli of clienteService.clienteList |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize "
+                  class="tamanyo_letra_inputp">
+                <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ cli.clienteNombre }} </td>
+                <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ cli.nit }} </td>
+                <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ cli.direccion }} </td>
+                <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                  <a class="btn text-info tamanyo_letra_labelp" (click)="d('Cross click')" (click)="seleccionarCliente(cli)">Seleccionar
+                    <i class="fas fa-edit"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                          [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </div>
+      <!-- formualrio para agregar cliente -->
+      <div class="row">
+        <div class="col-md-12" *ngIf="clienteService.abrirFormularioAddCli == 1">
+          <form class="col-md-12" #busForm="ngForm" (ngSubmit)='agregarCliente(busForm)'>
+            <div class="col-md-12">
+
+              <input type="hidden" name="clienteId" #clienteId="ngModel"
+                [(ngModel)]="clienteService.clienteSeleccionado.clienteId">
+              <input type="hidden" name="colegioId" #colegioId="ngModel"
+                [(ngModel)]="clienteService.clienteSeleccionado.colegioId">
+              <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                [(ngModel)]="clienteService.clienteSeleccionado.opcionDML">
+              <input type="hidden" name="estadoId" #estadoId="ngModel"
+                [(ngModel)]="clienteService.clienteSeleccionado.estadoId">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <input class="form-control" name="clienteNombre" #clienteNombre="ngModel"
+                        [(ngModel)]="clienteService.clienteSeleccionado.clienteNombre" placeholder="Nombres y apellidos"
+                        required>
+                      <div class="validation-error" *ngIf="clienteNombre.invalid && clienteNombre.touched">Campo
+                        requerido
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <input class="form-control" name="nit" #nit="ngModel"
+                        [(ngModel)]="clienteService.clienteSeleccionado.nit" placeholder="NIT">
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <input class="form-control" name="direccion" #direccion="ngModel"
+                        [(ngModel)]="clienteService.clienteSeleccionado.direccion" placeholder="Dirección">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="form-group col-md-10">
+                  <button [disabled]="!busForm.valid" type="submit" class="btn btn-lg btn-block btn-success ">Enviar
+                    datos
+                  </button>
+                </div>
+                <div class="form-group col-md-2">
+                  <a class="btn text-info" (click)="cerrarFormAddCliente()">Cerrar</a>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </ng-template>
+  <!-- para mostrar el historial -->
+  <ng-template #contentHistorial let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <div class="row">
+        <div class="col-md-12">
+          <h2 style=" text-align: center; color: #576778;">Historial de Pagos {{pagos.ciclo}}</h2>
+        </div>
+        <div class="col-md-12">
+          <h3 style="text-align: center; color: #17508C;">
+            {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido1 }}
+            {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido2 }}
+            {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre1 }}
+            {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre2 }}
+          </h3>
+
+        </div>
+      </div>
+
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- aqui la tabla con el records de pagos -->
+      <div class="row" *ngIf="pagoService.pagoList">
+        <div class="col-md-12">
+          <div class="col-md-12 table-responsive-sm">
+            <table class="table table-sm anotherhover table-striped">
+              <thead class="tamanyo_letra_labelp">
+                <tr>
+                  <th scope="col">Ciclo</th>
+                  <th scope="col">tipo pago</th>
+                  <th scope="col">Tarifa</th>
+                  <th scope="col">Mes pagado</th>
+                  <th scope="col">Forma pago</th>
+                  <th scope="col">Total pagado</th>
+                  <th scope="col">Editar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let pago of pagoService.pagoList  |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                class="tamanyo_letra_inputp">
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ pago.ciclo }} </td>
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ pago.tipoPagoNombre }} </td>
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ pago.monto }} </td>
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ pago.mesNombre }} </td>
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ pago.formaPagoNombre }} </td>
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+              {{ pago.total }} </td>
+                  <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                    <!-- <a class="btn" (click)="showForEdit(pago)">Editar
+                      <i class="fas fa-edit text-info"></i>
+                    </a> -->
+                    <a class="btn text-info tamanyo_letra_labelp" (click)="d('Cross click')" (click)="showForEdit(pago)">Seleccionar
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <!-- <select name="cars" id="cars">
+                      <option value="volvo">Volvo</option>
+                      <option value="saab">Saab</option>
+                      <option value="mercedes">Mercedes</option>
+                      <option value="audi">Audi</option>
+                    </select> -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                            [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+            </ngb-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+
+    </div>
+  </ng-template>
+</div>
+

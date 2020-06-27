@@ -1,0 +1,162 @@
+<div class="row">
+    <!-- <div class="col-md-12">
+        <h4 class="pull-left tamanyo_letra_titulo"> {{ titulo }} </h4>
+    </div> -->
+    <div class="col-md-12">
+        <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+    </div>
+
+    <div class="col-md-12">
+        
+        <div class="box box-primary">
+            <div class="box-header with-border"> 
+            <form class="config-form col-md-12" #cicloForm="ngForm" (ngSubmit)='onSubmit(cicloForm)'>
+                <h3 class="tamanyo_letra_titulo">{{ titulo }}</h3>
+                        
+                            <!-- Parámetros de control del servicio -->
+                            <input type="hidden" name="cicloId" #cicloId="ngModel"
+                                [(ngModel)]="cicloService.cicloSeleccionado.cicloId">
+                            <input type="hidden" name="colegioId" #colegioId="ngModel"
+                                [(ngModel)]="cicloService.cicloSeleccionado.colegioId">
+                            <input type="hidden" name="opcionSelect" #opcionSelect="ngModel"
+                                [(ngModel)]="cicloService.cicloSeleccionado.opcionSelect">
+                            <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                                [(ngModel)]="cicloService.cicloSeleccionado.opcionDML">
+                            <div class="row">
+                                <div class="form-grou col-md-3">
+                                    <label class="tamanyo_letra_labelp" for="anio">Ciclo en números</label>
+                                    <input class="form-control tamanyo_letra_inputp" name="anio" #anio="ngModel"
+                                        [(ngModel)]="cicloService.cicloSeleccionado.anio" placeholder="0000" required>
+                                    <div class="validation-error text_campo_requerido"
+                                        *ngIf="anio.invalid && anio.touched">Campo es requerido</div>
+                                </div>
+                                <div class="form-grou col-md-3">
+                                    <label class="tamanyo_letra_labelp" for="cicloNombre">Ciclo en letras</label>
+                                    <input class="form-control tamanyo_letra_inputp" name="cicloNombre"
+                                        #cicloNombre="ngModel" [(ngModel)]="cicloService.cicloSeleccionado.cicloNombre"
+                                        placeholder="Nombre ciclo" required>
+                                    <div class="validation-error text_campo_requerido"
+                                        *ngIf="cicloNombre.invalid && cicloNombre.touched">Campo es
+                                        requerido</div>
+                                </div>
+                                <div class="form-grou col-md-3">
+                                    <div class="form-group">
+                                        <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                                        <select class="form-control tamanyo_letra_inputp" name="estado"
+                                            #estado="ngModel" [(ngModel)]="cicloService.cicloSeleccionado.estado"
+                                            id="estado" required>
+                                            <!-- estos parametros estadoId y CodEstadoNombre vienen del modelo estado y no del model ciclo -->
+                                            <option *ngFor="let estado of estadoService.estadoList"
+                                                [value]="estado.estadoId">
+                                                {{estado.CodEstadoNombre}}</option>
+                                        </select>
+                                        <div class="validation-error text_campo_requerido"
+                                            *ngIf="estado.invalid && estado.touched">Campo requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-grou col-md-3">
+                                    <div class="form-group">
+                                        <label class=" tamanyo_letra_labelp" for="estado">Habilitar para
+                                            inscripción</label>
+                                        <select class="form-control tamanyo_letra_inputp"
+                                            name="habilitadoParaIncripcion" #habilitadoParaIncripcion="ngModel"
+                                            [(ngModel)]="cicloService.cicloSeleccionado.habilitadoParaIncripcion"
+                                            id="estado" required>
+                                            <option [value]="0">Deshabilitado</option>
+                                            <option [value]="1">Habilitado</option>
+                                        </select>
+                                        <div class="validation-error text_campo_requerido"
+                                            *ngIf="estado.invalid && estado.touched">Campo requerido
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <!-- aqui estaban los botones -->
+                            <div class="row">
+                                <div class="form-grou col-md-9">
+                                </div>
+                                <div class="form-grou col-md-1">
+                                    <button [disabled]="!cicloForm.valid" type="submit"
+                                        class="btn btn-block btn-success ">
+                                        <i class="fas fa-save"></i>
+                                        <!-- Enviar datos -->
+                                    </button>
+                                </div>
+                                <div class="form-grou col-md-1">
+                                    <button type="button" class="btn btn-block btn-info" (click)="open(content)">
+                                        <i class="fas fa-eye"></i>
+                                        <!-- listar -->
+                                    </button>
+                                </div>
+                                <div class="form-grou col-md-1">
+                                    <button type="button" class="btn btn-block btn-warning"
+                                        (click)="limpiarForm(cicloForm)">
+                                        <i class="fas fa-recycle"></i>
+                                        <!-- reset -->
+                                    </button>
+                                </div>
+                            </div>                       
+                 
+            </form>
+            </div>
+         </div>
+    
+    </div> 
+</div>
+<!-- inicio row modal -->
+<div class="row">
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title pull-left tamanyo_letra_titulo" id="modal-basic-title">Lista de ciclos escolares</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- <p>Resultados de la busqueda</p> -->
+            <!-- <div class="col-md-12 table-responsive-sm"> -->
+            <div class="row">
+                <div class="col-md-12 table-responsive-sm" *ngIf="cicloService.cicloList">
+                    <table class="table table-sm table-hover">
+                        <thead class="">
+                            <tr>
+                                <th class="tamanyo_letra_labelp" scope="col">Ciclo</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Status</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Habilitado para inscripción</th>
+                                <th class="tamanyo_letra_labelp" scope="col">Acciones</th>
+                                <!-- <th scope="col">Eliminar</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let ciclo of cicloService.cicloList">
+                                <td class="pull-left tamanyo_letra_inputp">{{ ciclo.anio }} - {{ ciclo.cicloNombre }}
+                                </td>
+                                <td [style.color]="ciclo.estado =='0'? '#808080':ciclo.estado==1?'#23B030':'#DA2A1B'">{{ ciclo.estadoNombre }}</td>
+                                <td *ngIf="ciclo.habilitadoParaIncripcion =='0'" [style.color]="'#808080'" >No</td>
+                                <td *ngIf="ciclo.habilitadoParaIncripcion =='1'" [style.color]="'#23B030'" >Si</td>
+                                <td>
+                                    <a class="btn text-info tamanyo_letra_labelp"
+                                        style="margin-top: -7px;padding-left: 0px;" (click)="d('Cross click')"
+                                        (click)="showForEdit(ciclo) ">Editar
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                                <!-- <td>
+                                  <a class="btn text-danger"  >Eliminar
+                                      <i class="fas fa-trash-alt"></i>
+                                  </a>
+                              </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+        </div>
+    </ng-template>
+</div>

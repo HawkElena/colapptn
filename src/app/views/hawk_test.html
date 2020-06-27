@@ -1,0 +1,21 @@
+<div class="text-center">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+  <!-- <a pageScroll href="#awesomePart">Take me to the awesomeness</a> -->
+  <hr>
+  <!-- PRODUCTOS Y SERVICIOS -->
+
+    <div class="col-lg-3" *ngFor="let estado of hawk_model" >{{estado.id}}
+      <h3>
+        {{estado.nombre}}
+      </h3>
+      <h3>
+        {{estado.precio}}
+      </h3>
+
+    </div>
+
+</div>
+
+

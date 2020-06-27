@@ -1,0 +1,30 @@
+<div class="col-md-12">
+  <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+</div>
+<div class="col-md-12" >
+    <h1 class="d-print-none">{{ titulo }}</h1>
+    <div class="row d-print-none">
+        <div class="form-grou col-md-2">
+                <button class="btn btn-lg btn-block btn-success" (click)="mostrarFormulario(1)">Solvencias</button>
+        </div>
+        <div class="form-grou col-md-2">
+            <button class="btn btn-lg btn-block btn-success" (click)="mostrarFormulario(2)">Lista de inscritos</button>
+        </div>
+        <!-- <div class="form-grou col-md-2">
+            <button class="btn btn-lg btn-block btn-success" (click)="downloadPDF()">Asistencias</button>
+        </div> -->
+    </div>
+    <hr>
+
+    <div class="row">
+        <div class="form-grou col-md-12" *ngIf="bandera == 1">
+            <rep-colegiaturas-vencidas></rep-colegiaturas-vencidas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-grou col-md-12" *ngIf="bandera == 2">
+            <rep-inscritos></rep-inscritos>
+        </div>
+    </div>
+
+</div>

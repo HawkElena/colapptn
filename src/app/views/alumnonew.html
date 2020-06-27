@@ -1,0 +1,433 @@
+<div class="row">
+  <div class="col-md-12">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+  </div>
+  <div class="col-md-12">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Datos generales</a>
+        <ng-template ngbNavContent>
+          <form class="col-md-12" style="margin-left: -15px;" #alumnoForm="ngForm" (ngSubmit)='onSubmit(alumnoForm)'>
+
+            <br>
+            <!-- seccion uno -->
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{ titulo }}</h3>
+
+                <div class="row" style="margin-top: 15px; margin-left: 5px;">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md3">
+                        <a [routerLink]="" (click)="activar_wizar_(1)"><i class="fa fa-file-signature btn-sm"
+                              style="text-align: center;"><br>
+                              <p style="font-size: smaller">Nombres y Apellidos</p>
+                            </i></a>
+                        </div>
+                        <div class="col-md3">
+                          <a [routerLink]="" (click)="activar_wizar_(2)"><i class="fa fa fa-address-card btn-sm"
+                              style="text-align: center;"><br>
+                              <p style="font-size: smaller">Datos generales</p>
+                            </i></a>
+                        </div>
+                        <div class="col-md3">
+                        <a [routerLink]="" (click)="activar_wizar_(3)"><i class="fa fa fa-map-marked-alt btn-sm"
+                              style="text-align: center;"><br>
+                              <p style="font-size: smaller">Ubicacion geografica</p>
+                            </i></a>
+
+                        </div>
+                        <div class="col-md3">
+                        <a [routerLink]="" (click)="activar_wizar_(4)" ><i class="fa fa fa-money-check-alt btn-sm"
+                              style="text-align: center;"><br>
+                              <p style="font-size: smaller">Otros datos</p>
+                            </i></a>
+                        </div>
+                    </div>
+                  </div>
+
+                </div>
+
+
+                <div class="box-tools pull-right" >
+                  <!-- hawk inicia -->
+                  <!-- <button [disabled]="!alumnoForm.valid" type="submit" class="btn tamanyo_letra_btnp  btn-success ">
+                    <i class="fas fa-save"></i>
+                  </button> -->
+                  <button type="button" class="btn btn-outline-primary" (click)="hide_sections(1)"
+                    [attr.aria-expanded]="!collapsed_json.first" aria-controls="apartado_alumno">
+                    <i class="fa fa-minus" *ngIf="!collapsed_json.first"></i>
+                    <i class="fa fa-plus" *ngIf="collapsed_json.first"></i>
+                  </button>
+                  <!-- hawk finaliza -->
+                </div>
+                <!-- /.box-tools -->
+              </div>
+              <!-- /.box-header -->
+
+              <!-- datos nombre y apellidos -->
+              <div class="box-body" id="apartado_alumno" [ngbCollapse]="collapsed_json.first" *ngIf="activo1">
+                <!-- <form class="col-md-12" #alumnoForm="ngForm" (ngSubmit)='onSubmit(alumnoForm)'> -->
+                <!-- Parámetros de control del servicio -->
+                <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+                <input type="hidden" name="colegioId" #colegioId="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+                <input type="hidden" name="codigoMineduc" #codigoMineduc="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.codigoMineduc">
+                <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+                <input type="hidden" name="foto" #foto="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.foto">
+                <input type="hidden" name="foto" #foto="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.foto">
+                <input type="hidden" name="alumnoCarnet" #alumnoCarnet="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoCarnet">
+                <input type="hidden" name="descuento" #descuento="ngModel"
+                  [(ngModel)]="registroAlumnoService.alumnoSeleccionado.descuento">
+
+                <div class="row">
+
+                  <div class="form-group col-md-3 ">
+                    <label class="tamanyo_letra_labelp" for="alumnoNombre1">Primer nombre
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="alumnoNombre1" #alumnoNombre1="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1" placeholder="" required
+                      maxlength="20">
+                    <div class="validation-error campo_requerido"
+                      *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">*
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="alumnoNombre2">Segundo nombre
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="alumnoNombre2" #alumnoNombre2="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre2" placeholder=""
+                      maxlength="20">
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label class="tamanyo_letra_labelp" for="alumnoNombre3">Otros nombres
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="alumnoNombre3" #alumnoNombre3="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre3" placeholder=""
+                      maxlength="40">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="alumnoApellido1">Primer apellido
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="alumnoApellido1" #alumnoApellido1="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoApellido1" placeholder="" required
+                      maxlength="20">
+                    <div class="validation-error campo_requerido"
+                      *ngIf="alumnoApellido1.invalid && alumnoApellido1.touched">*
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="alumnoApellido2">Segundo apellido
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="alumnoApellido2" #alumnoApellido2="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoApellido2" placeholder=""
+                      maxlength="20">
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label class="tamanyo_letra_labelp" for="alumnoApellido3">Apellido de casada
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="alumnoApellido3" #alumnoApellido3="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoApellido3" placeholder=""
+                      maxlength="20">
+                  </div>
+
+                </div>
+                <!-- fin datos personales 1 -->
+
+                <!-- </form> -->
+              </div>
+              <!-- /.box-body -->
+
+              <!-- datos generales -->
+              <div class="box-body" id="datos_persoanles1" [ngbCollapse]="collapsed_json.second" *ngIf="activo2">
+
+
+                <div class="row">
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="identificacion">Identificación
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp " name="identificacion"
+                      #identificacion="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.identificacion"
+                      placeholder="DPI-CUI" required maxlength="13">
+                    <div class="validation-error" *ngIf="identificacion.invalid && identificacion.touched">Campo
+                      requerido
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="generoId">Género</label>
+                    <select class="form-control tamanyo_letra_inputp" name="generoId" #generoId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.generoId" id="estado" required>
+                      <option *ngFor="let g of generoService.generoList" [value]="g.generoId">{{g.generoNombre}}
+                      </option>
+                    </select>
+                    <div class="validation-error" *ngIf="generoId.invalid && generoId.touched">Campo requerido
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="fechaNacimiento">Fecha de nacimiento
+                    </label>
+                    <div class="input-group">
+                      <input type="date" class="form-control tamanyo_letra_inputp" placeholder="" name="fechaNacimiento"
+                        #fechaNacimiento="ngModel"
+                        [(ngModel)]="registroAlumnoService.alumnoSeleccionado.fechaNacimiento">
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="telefono1">Teléfono
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp" name="telefono1" #telefono1="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.telefono1" placeholder="" max="8">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="telefono2">Teléfono alterno
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp" name="telefono2" #telefono2="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.telefono2" placeholder="" max="08">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label class="tamanyo_letra_labelp" for="telefono2">Email
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="email" #email="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.email" placeholder=""
+                      [email]="registroAlumnoService.alumnoSeleccionado.email!==''" maxlength="20">
+                    <!-- <div class="validation-error" *ngIf="email.errors?.required && email.touched">Campo requerido</div> -->
+                    <div class="validation-error" *ngIf="email.errors?.email && email.touched">Correo inválido</div>
+                  </div>
+
+                </div>
+                <!-- fin class row datps personales2 -->
+              </div>
+              <!-- /.box-body -->
+
+              <!-- ubicacion_geografica -->
+              <div class="box-body" id="ubicacion_geografica" [ngbCollapse]="collapsed_json.second" *ngIf="activo3">
+
+
+                <div class="row">
+
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="direccion">Dirección de residencia
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="direccion" #direccion="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.direccion" placeholder="" required
+                      maxlength="100">
+                    <div class="validation-error" *ngIf="direccion.invalid && direccion.touched">Campo requerido
+                    </div>
+                  </div>
+                  <!-- fin row direccion -->
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="paisId">Pais</label>
+                    <select class="form-control tamanyo_letra_inputp" name="paisId" #paisId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.paisId"
+                      (ngModelChange)="listarDepartamento($event)" required>
+                      <option class="tamanyo_letra_inputp" *ngFor="let pais of paisService.paisList"
+                        [value]="pais.paisId">{{pais.paisNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="paisId.invalid && paisId.touched">Campo requerido</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="departamentoId">Departamento</label>
+                    <select class="form-control tamanyo_letra_inputp" name="departamentoId" #departamentoId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.departamentoId"
+                      (ngModelChange)="listarMunicipio($event)" required>
+                      <option class="tamanyo_letra_inputp" *ngFor="let dep of departamentoService.departamentoList"
+                        [value]="dep.departamentoId">
+                        {{dep.departamentoNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="departamentoId.invalid && departamentoId.touched">Campo
+                      requerido
+                    </div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label class="tamanyo_letra_labelp" for="municipioId">Municipio</label>
+                    <select class="form-control tamanyo_letra_inputp" name="municipioId" #municipioId="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.municipioId" id="estado1" required>
+                      <option class="tamanyo_letra_inputp" *ngFor="let muni of municipioService.municipioList"
+                        [value]="muni.municipioId">
+                        {{muni.municipioNombre}}</option>
+                    </select>
+                    <div class="validation-error" *ngIf="municipioId.invalid && municipioId.touched">Campo requerido
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                      <label class="tamanyo_letra_labelp" for="estado">Estado</label>
+                      <select class="form-control tamanyo_letra_inputp" name="estadoId" #estadoId="ngModel"
+                        [(ngModel)]="registroAlumnoService.alumnoSeleccionado.estadoId" required>
+                        <option *ngFor="let est of estadoService.estadoList" [value]="est.estadoId">
+                          {{est.CodEstadoNombre}}</option>
+                        <!-- <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">{{estado.CodEstadoNombre}}</option> -->
+                      </select>
+                      <div class="validation-error" *ngIf="estadoId.invalid && estadoId.touched">Campo requerido
+                      </div>
+
+                  </div>
+                  <!-- fin row estado -->
+                </div>
+              </div>
+              <!-- /.box-body -->
+
+              <!-- otros datos -->
+              <div class="box-body" id="otros_datos" [ngbCollapse]="collapsed_json.first" *ngIf="activo4">
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label class="tamanyo_letra_labelp" for="codigoMineduc">Código MINEDUC
+                    </label>
+                    <input class="form-control tamanyo_letra_inputp" name="codigoMineduc" #codigoMineduc="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.codigoMineduc">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label class="tamanyo_letra_labelp" for="alumnoCarnet">Carnet
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp" name="alumnoCarnet"
+                      #alumnoCarnet="ngModel" [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoCarnet"
+                      placeholder="">
+                  </div>
+                  <!-- inicia aqui va todo para un solo tab -->
+                  <div class="form-group col-md-12">
+                    <label class="tamanyo_letra_labelp" for="descuento">Descuento (Q)
+                    </label>
+                    <input type="number" class="form-control tamanyo_letra_inputp" name="descuento" #descuento="ngModel"
+                      [(ngModel)]="registroAlumnoService.alumnoSeleccionado.descuento"
+                      placeholder="Descuento que le hará a las tarifas de colegiaturas. Ejemplo (50.00)">
+                  </div>
+
+                </div>
+
+              </div>
+              <!-- /.box-body -->
+
+            </div>
+            <!-- /.box -->
+            <!-- fin se seccion uno -->
+
+            <div class="row">
+              <div class="col-md-4">
+
+                <button [disabled]="!alumnoForm.valid" type="submit" class="btn btn-block btn-success ">
+                  <i class="fas fa-save"></i>
+                  <!-- Enviar datos -->
+                </button>
+
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-block btn-info " (click)="open(content)">
+                  <i class="fas fa-search"></i>
+                  <!-- Buscar alumno -->
+                </button>
+
+              </div>
+              <div class="col-md-4">
+
+                <button type="button" class="btn btn-block btn-warning" (click)="limpiarForm(alumnoForm);">
+                  <i class="fas fa-recycle"></i>
+                  <!-- Reset -->
+                </button>
+              </div>
+            </div>
+
+          </form>
+
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+        <a ngbNavLink>Agregar encargado</a>
+        <ng-template ngbNavContent>
+          <form>
+            <!-- <h3>hawkkkkkk</h3> -->
+            <!-- <encargado [childExample]= "parentExample" ></encargado> -->
+            <encargado [arreglo_a_recibir]="parentData"></encargado>
+          </form>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+  </div>
+</div>
+
+<!-- fin row del formulario de registro de alumnos -->
+<!-- inicio row modal de busqueda -->
+<div class="row">
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <!-- <h4 class="modal-title" id="modal-basic-title">Hi there!</h4> -->
+      <form class="col-md-12" #busForm="ngForm" (ngSubmit)='buscarAlumno(busForm)'>
+        <div class="row">
+          <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+          <input type="hidden" name="colegioId" #colegioId="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+          <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+            [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+          <div class="form-group col-md-10">
+            <input class="form-control" name="alumnoNombre1" #alumnoNombre1="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1"
+              placeholder="Ingrese primer nombre o apellido" required>
+            <div class="validation-error" *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">Campo requerido
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">Buscar</button>
+          </div>
+        </div>
+      </form>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <p>Resultados de la busqueda</p> -->
+      <div class="col-md-12 table-responsive-sm">
+        <table class="table table-sm anotherhover table-striped">
+          <thead class="tamanyo_letra_labelp">
+            <tr>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alu of registroAlumnoService.alumnoList" class="tamanyo_letra_inputp">
+              <td>{{ alu.alumnoApellido1 }} {{ alu.alumnoApellido2 }} {{ alu.alumnoapellido3 }}</td>
+              <td>{{ alu.alumnoNombre1 }} {{ alu.alumnoNombre2 }} {{ alu.alumnoNombre3 }} </td>
+              <td>
+
+                <a class="btn tamanyo_letra_inputp" (click)="d('Cross click')" (click)="showForEdit(alu)">Editar
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td>
+              <td>
+                <a class="btn text-danger tamanyo_letra_labelp">Eliminar
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>

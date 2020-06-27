@@ -1,0 +1,63 @@
+<div class="col-md-12">
+  <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+</div>
+<div class="col-md-12" >
+
+    <h5 class="d-print-none">{{ titulo }}</h5>
+
+    <div class="row d-print-none">
+        <div class="form-grou col-md-2">
+            <div class="form-group">
+                <label for="nivelId" class="control-label">Nivel</label>
+                <select class="form-control" name="nivelId" #nivelId="ngModel" [(ngModel)]="repColVencidasService.repColVencidasSeleccionado.nivelId"
+                    (ngModelChange)="listarCarreraJornada($event)">
+                    <!-- <select class="form-control" name="nivelPrerrequisitoId"> -->
+                    <option *ngFor="let nivel of nivelService.nivelList" [value]="nivel.nivelId">{{nivel.nivelNombre}}</option>
+                </select>
+            </div>
+        </div>
+       <div class="form-grou col-md-6">
+            <label for="carJorId" class="control-label">Carrera</label>
+            <select class="form-control" name="carJorId" #carJorId="ngModel" [(ngModel)]="repColVencidasService.repColVencidasSeleccionado.carJorId" required (ngModelChange)="listarCarreraJoranaGrado($event)">
+                <option *ngFor="let carJor of carreraJornadaService.carJorList" [value]="carJor.carJorId">{{carJor.carreraNombre
+                    }} {{carJor.jornadaNombre}} </option>
+            </select>
+            <div class="validation-error" *ngIf="carJorId.invalid && carJorId.touched">Campo requerido</div>
+        </div>
+        <div class="form-grou col-md-3">
+            <label for="jcgId" class="control-label">Grado</label>
+            <select class="form-control" name="jcgId" #jcgId="ngModel" [(ngModel)]="repColVencidasService.repColVencidasSeleccionado.jcgId"
+                required (ngModelChange)="crearReporteSolvencias($event, 1)">
+                <option *ngFor="let cjg of carJorGraService.carJorGraList" [value]="cjg.carJorGraId">{{cjg.gradoNombre }}</option>
+            </select>
+            <div class="validation-error" *ngIf="jcgId.invalid && jcgId.touched">Campo requerido</div>
+        </div>
+    </div>
+    <hr class="d-print-none">
+    <!-- espacio para el reporte -->
+    <div class="row" id="content" #content *ngIf="repColVencidasService.repColVencidasList">
+        <div class="form-grou col-md-12">
+           <h5>Lista de alumnos inscritos, ciclo escolar {{repColVencidasService.repColVencidasSeleccionado.cicloConsultado }}</h5>
+            <h4> {{ encabezadoReporte }}  {{repColVencidasService.repColVencidasSeleccionado.fechadeReporte}} </h4>
+
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Sección</th>
+                        <th scope="col">Alumno</th>
+                    </tr>
+                </thead>
+                <tr *ngFor="let sol of repColVencidasService.repColVencidasList">
+                    <td> {{sol.seccionNombre    }}</td>
+                    <td> {{sol.alumnoNombres    }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br>
+    <div class="row d-print-none" *ngIf="repColVencidasService.repColVencidasList">
+        <div class="form-grou col-md-4">
+            <button class="btn btn-lg btn-block btn-success" (click)="ejecutarCtrlP()">Imprimir</button>
+        </div>
+    </div>
+</div>

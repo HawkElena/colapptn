@@ -1,0 +1,14 @@
+<div class="col-md-12">
+  <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+</div>
+<!-- Lista desplegable de estados -->
+<div class="form-group">
+        <label for="exampleSelect1">Estado</label>
+        <!-- <select class="form-control" [(ngModel)]="estadoSeleccionado" (ngModelChange)="onEstadoSelected($event)" id="exampleSelect1"> -->
+                <select class="form-control" name="estadoId" #estadoId="ngModel" [(ngModel)]="estadoService.estadoSeleccionado.estadoId" id="estado">
+            <option *ngFor="let estado of estadoService.estadoList" [value]="estado.estadoId">{{estado.CodEstadoNombre}}</option>
+        </select>
+    </div>
+<br>
+<!-- muestra el valor del como seleccionado al ejecutar la funcion onEstadoSelected -->
+{{ modifiedText }}

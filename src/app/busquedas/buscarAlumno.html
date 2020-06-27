@@ -1,0 +1,155 @@
+<div class="row ">
+  <ng-template #content let-c="close" let-d="dismiss" >
+    <div class="modal-header">
+      <div class="row">
+        <div class="col-md-12" style="margin-left: 50%;">
+          <h2 class="modal-title" style=" text-align: center; color: #576778;" id="modal-basic-title">Busqueda de Alumos</h2>
+        </div>
+      </div>
+
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body" style="background-color: #F9FAFD">
+      <form class="col-md-10" #busForm="ngForm" (ngSubmit)='buscarAlumno(busForm)'>
+        <div class="row">
+          <div class="col-md-12">
+            <input type="hidden" name="alumnoId" #alumnoId="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoId">
+            <input type="hidden" name="colegioId" #colegioId="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.colegioId">
+            <input type="hidden" name="opcionDML" #opcionDML="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.opcionDML">
+
+          </div>
+
+          <div class="form-group col-md-8">
+            <input class="form-control tamanyo_letra_inputp" name="alumnoNombre1" #alumnoNombre1="ngModel"
+              [(ngModel)]="registroAlumnoService.alumnoSeleccionado.alumnoNombre1" placeholder="Ingrese un nombre o apellido"
+              required>
+            <div class="validation-error tamanyo_letra_labelp" *ngIf="alumnoNombre1.invalid && alumnoNombre1.touched">
+              Campo requerido
+            </div>
+          </div>
+          <div class="form-group col-md-4">
+            <button [disabled]="!busForm.valid" type="submit" class="btn btn-info">
+                <i class="fa fa-search"></i>
+                Buscar alumno
+            </button>
+          </div>
+        </div>
+        </form>
+      <!-- <p>Resultados de la busqueda</p> -->
+      <div class="col-md-12 table-responsive-sm" *ngIf="registroAlumnoService.alumnoList">
+        <table class="table table-sm anotherhover table-striped">
+          <thead class="tamanyo_letra_labelp">
+            <tr>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Seleccionar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alu of registroAlumnoService.alumnoList |slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+              class="tamanyo_letra_inputp">
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                {{ alu.alumnoApellido1 }} {{ alu.alumnoApellido2 }} {{ alu.alumnoApellido3 }}</td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+                {{ alu.alumnoNombre1 }} {{ alu.alumnoNombre2 }} {{ alu.alumnoNombre3 }} </td>
+              <td [ngStyle]="{'padding-top': '0px','padding-bottom': '0px'}">
+
+                <a class="btn text-info tamanyo_letra_labelp" (click)="d('Cross click')" (click)="verPerfilAlumno(alu)">Seleccionar
+                  <i class="fas fa-edit"></i>
+                </a>
+              </td></tr>
+          </tbody>
+        </table>
+        <ngb-pagination class="pull-right" [collectionSize]="num_items_busqueda_alum.length"
+                        [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button> -->
+    </div>
+  </ng-template>
+</div>
+
+<br>
+<!-- <div class="row">
+  <div class="col-md-6"> -->
+    <!-- seccion para el alumno -->
+    <div class="box box-primary posicion-tope">
+      <div class="box-body box-profile">
+        <div class="img-container-div">
+          <img class="borde_redondeadoD img-container" *ngIf="!blnBanderafoto" style="text-align:center;"
+            src="../../assets/img/user_2.jpg" alt="User profile picture">
+
+          <img class="borde_redondeadoD img-container" *ngIf="blnBanderafoto" style="text-align:center;"
+            [src]="foto_alumno" alt="User profile picture">
+
+        </div>
+
+        <hr>
+        <p class="text-muted text-center" *ngIf=childData.esHijo>
+          <button class="btn btn-primary btn-block" (click)="open(content)">
+            <i class="fas fa-search"></i>
+            Buscar alumno
+          </button>
+        </p>
+        <ul class="list-group list-group-unbordered ">
+          <li class="list-group-item tamanyo_letra_labelp">
+            <b>Nombres: </b>
+            <a class="pull-right tamanyo_letra_inputp">
+              {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre1 }}
+              {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre2 }}
+              {{ registroAlumnoService.alumnoSeleccionado.alumnoNombre3 }}
+            </a>
+          </li>
+          <li class="list-group-item tamanyo_letra_labelp">
+            <b>Apellidos:</b>
+            <a class="pull-right tamanyo_letra_inputp">
+              {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido1 }}
+              {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido2
+                                        }} {{ registroAlumnoService.alumnoSeleccionado.alumnoApellido3 }}
+            </a>
+          </li>
+          <li class="list-group-item tamanyo_letra_labelp">
+            <b>Código MINEDUC:</b>
+            <a class="pull-right tamanyo_letra_inputp">
+              {{ registroAlumnoService.alumnoSeleccionado.codigoMineduc }}
+            </a>
+          </li>
+          <li class="list-group-item tamanyo_letra_labelp">
+            <b>Identificación:</b>
+            <a class="pull-right tamanyo_letra_inputp">
+              {{ registroAlumnoService.alumnoSeleccionado.identificacion }}
+            </a>
+          </li>
+          <li class="list-group-item tamanyo_letra_labelp">
+            <b>Dirección:</b>
+            <a class="pull-right tamanyo_letra_inputp">
+              {{ registroAlumnoService.alumnoSeleccionado.direccion }}
+              {{ registroAlumnoService.alumnoSeleccionado.municipioNombre }}
+              {{registroAlumnoService.alumnoSeleccionado.departamentoNombre }}
+              {{ registroAlumnoService.alumnoSeleccionado.paisNombre}}
+            </a>
+          </li>
+          <li class="list-group-item tamanyo_letra_labelp">
+            <b>Telefonos:</b>
+            <a class="pull-right tamanyo_letra_inputp">
+              {{ registroAlumnoService.alumnoSeleccionado.telefono1 }}
+              {{ registroAlumnoService.alumnoSeleccionado.telefono2 }}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  <!-- </div>
+
+
+</div> -->
